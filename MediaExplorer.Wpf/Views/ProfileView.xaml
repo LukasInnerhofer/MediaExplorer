@@ -1,0 +1,50 @@
+﻿<mvxviews:MvxWpfView 
+    x:Class="MediaExplorer.Wpf.Views.ProfileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
+    xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+    xmlns:viewmodels="clr-namespace:MediaExplorer.Core.ViewModels;assembly=MediaExplorer.Core"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Add">
+                <MenuItem Header="New Folder" Command="{Binding NewFolderCommand}"/>
+                <MenuItem Header="New Album" Command="{Binding NewAlbumCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Rename" Command="{Binding StartRenameCommand}"/>
+            </MenuItem>
+        </Menu>
+
+        <ListView Grid.Row="1" ItemsSource="{Binding ViewModels}" SelectedItem="{Binding SelectedViewModel}" Name="ListView">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewGotKeyboardFocus" Handler="ListViewItem_PreviewGotKeyboardFocus"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.Resources>
+                <DataTemplate DataType="{x:Type viewmodels:VirtualFolderViewModel}">
+                    <local:VirtualFolderView DataContext="{Binding .}">
+                        <local:VirtualFolderView.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Rename" Command="{Binding StartRenameCommand}"/>
+                            </ContextMenu>
+                        </local:VirtualFolderView.ContextMenu>
+                    </local:VirtualFolderView>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type viewmodels:VirtualAlbumFileViewModel}">
+                    <local:VirtualAlbumFileView DataContext="{Binding .}"></local:VirtualAlbumFileView>
+                </DataTemplate>
+            </ListView.Resources>
+        </ListView>
+    </Grid>
+</mvxviews:MvxWpfView>

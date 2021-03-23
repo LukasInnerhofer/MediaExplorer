@@ -1,0 +1,22 @@
+﻿<mvxviews:MvxWindowsPage
+    x:Class="MediaExplorer.Uwp.Views.CreateProfileView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MediaExplorer.Uwp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mvxviews="using:MvvmCross.Platforms.Uap.Views"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Width="300">
+        <TextBlock Margin="0,0,0,8" TextWrapping="Wrap" Text="No valid profile found. Create one by entering your private key."/>
+        <PasswordBox Margin="0,0,0,8" Password="{Binding Key, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        <Button
+            Content="Create"
+            Command="{Binding CreateCommand}"/>
+    </StackPanel>
+</mvxviews:MvxWindowsPage>
