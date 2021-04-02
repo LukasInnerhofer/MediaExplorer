@@ -4,6 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MediaExplorer.Core.Models;
+using MvvmCross;
+using MediaExplorer.Core.Services;
+using System.Net;
+using System.Threading;
+using System.IO;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -38,6 +43,14 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand StartRenameCommand =>
             _startRenameCommand ?? (_startRenameCommand = new MvxCommand(StartRename, StartRenameCanExecute));
 
+        private IMvxCommand _confirmRenameCommand;
+        public IMvxCommand ConfirmRenameCommand =>
+            _confirmRenameCommand ?? (_confirmRenameCommand = new MvxCommand(ConfirmRename));
+
+        private IMvxCommand _cancelRenameCommand;
+        public IMvxCommand CancelRenameCommand =>
+            _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
+
         public VirtualAlbumFileViewModel() : base()
         {
             IsNameReadOnly = true;
@@ -56,6 +69,35 @@ namespace MediaExplorer.Core.ViewModels
         private bool StartRenameCanExecute()
         {
             return IsNameReadOnly;
+        }
+
+        private void ConfirmRename()
+        {
+            try
+            {
+                AlbumFile.Rename(Name);
+                IsNameReadOnly = true;
+            }
+            catch (Exception e)
+            {
+                string errorMessage = "Unknown error.";
+                if (e is ArgumentException)
+                {
+                    errorMessage = "New name must not be empty.";
+                }
+                else if (e is VirtualFileSystemObjectExistsException)
+                {
+                    errorMessage = $"An album with the name \"{Name}\" already exists.";
+                }
+                Name = AlbumFile.Name;
+                Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowMessageBox(errorMessage);
+            }
+        }
+
+        private void CancelRename()
+        {
+            Name = AlbumFile.Name;
+            IsNameReadOnly = true;
         }
     }
 }

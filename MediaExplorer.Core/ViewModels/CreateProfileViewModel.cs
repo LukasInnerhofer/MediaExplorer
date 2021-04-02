@@ -4,6 +4,7 @@ using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,10 +40,14 @@ namespace MediaExplorer.Core.ViewModels
 
         private async Task Create()
         {
-            await Mvx.IoCProvider.Resolve<ICryptographyService<AesCryptoServiceProvider>>().SerializeAsync(
-                "profile", 
-                new Models.Profile(), 
-                SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key)));
+            using(var fs = new FileStream("profile", FileMode.Create))
+            {
+                await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(
+                    fs,
+                    new Models.Profile(),
+                    SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key)));
+            }
+            
             await Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this);
         }
 

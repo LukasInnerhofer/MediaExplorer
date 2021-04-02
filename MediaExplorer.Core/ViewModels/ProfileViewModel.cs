@@ -4,6 +4,7 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -58,7 +59,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private IMvxCommand _newAlbumCommand;
         public IMvxCommand NewAlbumCommand =>
-            _newAlbumCommand ?? (_newAlbumCommand = new MvxCommand(NewAlbum));
+            _newAlbumCommand ?? (_newAlbumCommand = new MvxAsyncCommand(NewAlbumAsync));
 
         private IMvxCommand _startRenameCommand;
         public IMvxCommand StartRenameCommand =>
@@ -92,12 +93,12 @@ namespace MediaExplorer.Core.ViewModels
             ViewModels.Add(viewModel);
         }
 
-        private void NewAlbum()
+        private async Task NewAlbumAsync()
         {
             IOpenFolderDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
             if((bool)dialog.ShowDialog())
             {
-                var album = Album.FromBasePath(dialog.SelectedPath);
+                var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
                 var albumFile = new VirtualAlbumFile(album, RootFolder);
                 var viewModel = new VirtualAlbumFileViewModel();
                 viewModel.Prepare(albumFile);

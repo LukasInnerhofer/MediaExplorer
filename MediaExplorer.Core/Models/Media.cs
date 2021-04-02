@@ -13,5 +13,10 @@ namespace MediaExplorer.Core.Models
         {
             Path = string.Empty;
         }
+
+        public Media(string path)
+        {
+            Path = Path;
+        }
     }
 }

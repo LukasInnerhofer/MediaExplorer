@@ -48,9 +48,14 @@ namespace MediaExplorer.Core.ViewModels
 
         private async Task Open()
         {
-            var profile = await Mvx.IoCProvider.Resolve<ICryptographyService<AesCryptoServiceProvider>>().DeserializeAsync<Models.Profile>(
-                "profile",
-                SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key)));
+            Models.Profile profile;
+            using(var fs = new FileStream("profile", FileMode.Open))
+            {
+                byte[] keyHash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key));
+                profile = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Models.Profile>(fs, keyHash);
+                profile.KeyHash = keyHash;
+            }
+            
             await Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new ProfileViewModel(), profile);
         }
 
