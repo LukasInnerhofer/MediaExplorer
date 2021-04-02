@@ -61,7 +61,7 @@ namespace MediaExplorer.Core.Services
 
             var keyHash = new byte[HashSize];
             await source.ReadAsync(keyHash, 0, HashSize);
-            if(!Enumerable.SequenceEqual(_hashProvider.ComputeHash(key), keyHash))
+            if (!Enumerable.SequenceEqual(_hashProvider.ComputeHash(key), keyHash))
             {
                 throw new InvalidKeyException();
             }
@@ -83,11 +83,11 @@ namespace MediaExplorer.Core.Services
             }
         }
 
-        public async Task Encrypt(Stream source, Stream dest, byte[] key)
+        public async Task EncryptAsync(Stream source, Stream dest, byte[] key)
         {
             _cryptoProvider.Key = key;
             _cryptoProvider.GenerateIV();
-            
+
             await dest.WriteAsync(_cryptoProvider.IV, 0, _cryptoProvider.IV.Length);
             await dest.WriteAsync(_hashProvider.ComputeHash(key), 0, HashSize);
 
@@ -95,14 +95,14 @@ namespace MediaExplorer.Core.Services
             {
                 var buffer = new byte[BufferSize];
                 int bytesRead = 0;
-                while((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length)) > 0)
+                while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
                     await cs.WriteAsync(buffer, 0, bytesRead);
                 }
             }
         }
 
-        public async Task Decrypt(Stream source, Stream dest, byte[] key)
+        public async Task DecryptAsync(Stream source, Stream dest, byte[] key)
         {
             source.Seek(0, SeekOrigin.End);
             int size = (int)source.Position;
@@ -127,6 +127,20 @@ namespace MediaExplorer.Core.Services
                 await cs.ReadAsync(buffer, 0, size);
                 await dest.WriteAsync(buffer, 0, size);
             }
+        }
+
+        public async Task<byte[]> ComputeHashAsync(Stream source)
+        {
+            source.Seek(0, SeekOrigin.End);
+            var buffer = new byte[source.Position];
+            source.Seek(0, SeekOrigin.Begin);
+            await source.ReadAsync(buffer, 0, buffer.Length);
+            return _hashProvider.ComputeHash(buffer);
+        }
+
+        public byte[] ComputeHash(byte[] source)
+        {
+            return _hashProvider.ComputeHash(source);
         }
     }
 }

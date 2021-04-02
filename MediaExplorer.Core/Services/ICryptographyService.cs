@@ -11,7 +11,9 @@ namespace MediaExplorer.Core.Services
     {
         Task SerializeAsync(Stream fileStream, object data, byte[] key);
         Task<T> DeserializeAsync<T>(Stream dest, byte[] key);
-        Task Encrypt(Stream source, Stream dest, byte[] key);
-        Task Decrypt(Stream source, Stream dest, byte[] key);
+        Task EncryptAsync(Stream source, Stream dest, byte[] key);
+        Task DecryptAsync(Stream source, Stream dest, byte[] key);
+        Task<byte[]> ComputeHashAsync(Stream source);
+        byte[] ComputeHash(byte[] source);
     }
 }
