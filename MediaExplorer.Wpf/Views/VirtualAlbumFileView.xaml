@@ -16,7 +16,7 @@
         <converters:IsNameReadOnlyToBorderThicknessConverter x:Key="IsNameReadOnlyToBorderThicknessConverter"/>
     </mvxviews:MvxWpfView.Resources>
 
-    <WrapPanel>
+    <WrapPanel Name="RootPanel" PreviewKeyDown="RootPanel_PreviewKeyDown">
         <TextBox 
             Name="TextBox"
             Loaded="TextBox_Loaded"

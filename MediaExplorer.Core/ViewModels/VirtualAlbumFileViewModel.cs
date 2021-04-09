@@ -9,6 +9,7 @@ using MediaExplorer.Core.Services;
 using System.Net;
 using System.Threading;
 using System.IO;
+using MvvmCross.Navigation;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -50,6 +51,10 @@ namespace MediaExplorer.Core.ViewModels
         private IMvxCommand _cancelRenameCommand;
         public IMvxCommand CancelRenameCommand =>
             _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
+
+        private IMvxCommand _openCommand;
+        public IMvxCommand OpenCommand =>
+            _openCommand ?? (_openCommand = new MvxCommand(Open));
 
         public VirtualAlbumFileViewModel() : base()
         {
@@ -98,6 +103,14 @@ namespace MediaExplorer.Core.ViewModels
         {
             Name = AlbumFile.Name;
             IsNameReadOnly = true;
+        }
+
+        private void Open()
+        {
+            if(IsNameReadOnly)
+            {
+                Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new AlbumIterativeViewModel(), _albumFile.Album);
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
     xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     xmlns:viewmodels="clr-namespace:MediaExplorer.Core.ViewModels;assembly=MediaExplorer.Core"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800">
     <Grid>

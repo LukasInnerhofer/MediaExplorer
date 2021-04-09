@@ -16,7 +16,7 @@ namespace MediaExplorer.Core.Models
 
         public Media(string path)
         {
-            Path = Path;
+            Path = path;
         }
     }
 }

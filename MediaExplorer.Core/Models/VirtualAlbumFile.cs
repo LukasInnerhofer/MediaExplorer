@@ -11,13 +11,13 @@ namespace MediaExplorer.Core.Models
     {
         private string _realPath;
 
-        [NonSerialized]
-        private Album _album;
+        [field: NonSerialized]
+        public Album Album { get; set; }
 
         public VirtualAlbumFile(Album album, VirtualFolder parent) : base(album.Name, parent)
         {
-            _album = album;
-            _realPath = _album.FilePath;
+            Album = album;
+            _realPath = Album.FilePath;
         }
 
         public override void InitializeNonSerializedMembers()

@@ -15,6 +15,7 @@ namespace MediaExplorer.Core.Models
     {
         [NonSerialized]
         private byte[] _key;
+        public byte[] Key { get { return _key; } }
 
         public string Name { get; private set; }
         
@@ -24,7 +25,7 @@ namespace MediaExplorer.Core.Models
         private string _basePath { get; set; }
 
         private List<MediaCollection> _mediaCollections;
-        public IReadOnlyCollection<MediaCollection> MediaCollections { get { return _mediaCollections; } }
+        public IReadOnlyList<MediaCollection> MediaCollections { get { return _mediaCollections; } }
 
         public Album()
         {
@@ -53,20 +54,22 @@ namespace MediaExplorer.Core.Models
             string encryptedPath = string.Empty;
             foreach (string file in Directory.EnumerateFiles(path))
             {
+                string mediaName = string.Empty;
                 using (var src = new FileStream(file, FileMode.Open))
                 {
-                    encryptedPath = _basePath + Path.DirectorySeparatorChar +
-                        "media" + Path.DirectorySeparatorChar +
-                        BitConverter.ToString(
+                    mediaName = BitConverter.ToString(
                             await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(src)).Replace("-", "") + "." +
                         Path.GetFileName(file).Split('.').Last();
+                    encryptedPath = _basePath + Path.DirectorySeparatorChar +
+                        "media" + Path.DirectorySeparatorChar +
+                        mediaName;
                     src.Seek(0, SeekOrigin.Begin);
                     using (var dest = new FileStream(encryptedPath, FileMode.Create))
                     {
                         await Mvx.IoCProvider.Resolve<ICryptographyService>().EncryptAsync(src, dest, _key);
                     }
                 }
-                _mediaCollections.Add(new MediaCollection(new Media(encryptedPath)));
+                _mediaCollections.Add(new MediaCollection(mediaName.Split('.').First(), new Media(encryptedPath)));
             }
         }
 
@@ -79,6 +82,7 @@ namespace MediaExplorer.Core.Models
 
             foreach (string folder in Directory.EnumerateDirectories(path))
             {
+                string collectionName = string.Empty;
                 encryptedDirPath = _basePath + Path.DirectorySeparatorChar +
                     "media" + Path.DirectorySeparatorChar +
                     folder.Split(Path.DirectorySeparatorChar).Last();
@@ -108,14 +112,15 @@ namespace MediaExplorer.Core.Models
                         media.Add(new Media(encryptedFilePath));
                     }
 
+                    collectionName = BitConverter.ToString(
+                                await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(folderHashStream)).Replace("-", "");
                     Directory.Move(encryptedDirPath, Path.GetDirectoryName(encryptedDirPath) + Path.DirectorySeparatorChar +
-                            BitConverter.ToString(
-                                await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(folderHashStream)).Replace("-", ""));
+                            collectionName);
                 }
-            }
-            if (media.Count > 0)
-            {
-                _mediaCollections.Add(new MediaCollection(media));
+                if (media.Count > 0)
+                {
+                    _mediaCollections.Add(new MediaCollection(collectionName, media));
+                }
             }
         }
     }
