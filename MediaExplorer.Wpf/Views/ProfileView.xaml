@@ -17,6 +17,7 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.Row="0">
+            <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
             <MenuItem Header="Add">
                 <MenuItem Header="New Folder" Command="{Binding NewFolderCommand}"/>
                 <MenuItem Header="New Album" Command="{Binding NewAlbumCommand}"/>

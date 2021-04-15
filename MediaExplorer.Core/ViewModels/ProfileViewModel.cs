@@ -4,6 +4,7 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.ViewModels
@@ -53,6 +54,10 @@ namespace MediaExplorer.Core.ViewModels
             set { SetProperty(ref _selectedViewModel, value); }
         }
 
+        private IMvxCommand _saveCommand;
+        public IMvxCommand SaveCommand =>
+            _saveCommand ?? (_saveCommand = new MvxAsyncCommand(Save));
+
         private IMvxCommand _newFolderCommand;
         public IMvxCommand NewFolderCommand =>
             _newFolderCommand ?? (_newFolderCommand = new MvxCommand(NewFolder));
@@ -74,6 +79,14 @@ namespace MediaExplorer.Core.ViewModels
         {
             _profile = parameter;
             RootFolder = _profile.RootFolder;
+        }
+
+        private async Task Save()
+        {
+            using(var fs = new FileStream(Constants.File.Profile, FileMode.Open))
+            {
+                await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, _profile, _profile.KeyHash);
+            }
         }
 
         private void NewFolder()
