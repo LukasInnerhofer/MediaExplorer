@@ -13,7 +13,7 @@ using MvvmCross.Navigation;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class VirtualAlbumFileViewModel : MvxViewModel<VirtualAlbumFile>, IVirtualFileSystemObjectViewModel
+    public class VirtualAlbumFileViewModel : MvxViewModel, IVirtualFileSystemObjectViewModel
     {
         private VirtualAlbumFile _albumFile;
         private VirtualAlbumFile AlbumFile
@@ -56,14 +56,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand OpenCommand =>
             _openCommand ?? (_openCommand = new MvxCommand(Open));
 
-        public VirtualAlbumFileViewModel() : base()
+        public VirtualAlbumFileViewModel(VirtualAlbumFile albumFile) : base()
         {
+            AlbumFile = albumFile;
             IsNameReadOnly = true;
-        }
-
-        public override void Prepare(VirtualAlbumFile parameter)
-        {
-            AlbumFile = parameter;
         }
 
         private void StartRename()

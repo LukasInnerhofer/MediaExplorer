@@ -26,15 +26,11 @@ namespace MediaExplorer.Core.ViewModels
                 {
                     if(child is VirtualFolder)
                     {
-                        var viewModel = new VirtualFolderViewModel();
-                        viewModel.Prepare(child as VirtualFolder);
-                        ViewModels.Add(viewModel);
+                        ViewModels.Add(new VirtualFolderViewModel(child as VirtualFolder));
                     }
                     else
                     {
-                        var viewModel = new VirtualAlbumFileViewModel();
-                        viewModel.Prepare(child as VirtualAlbumFile);
-                        ViewModels.Add(viewModel);
+                        ViewModels.Add(new VirtualAlbumFileViewModel(child as VirtualAlbumFile));
                     }
                 }
             }
@@ -100,10 +96,7 @@ namespace MediaExplorer.Core.ViewModels
                 name = $"New Folder {counter++}";
             } while (!RootFolder.AddChild(folder));
 
-            var viewModel = new VirtualFolderViewModel();
-            viewModel.Prepare(folder);
-            viewModel.IsNameReadOnly = false;
-            ViewModels.Add(viewModel);
+            ViewModels.Add(new VirtualFolderViewModel(folder) { IsNameReadOnly = false });
         }
 
         private async Task NewAlbumAsync()
@@ -113,10 +106,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
                 var albumFile = new VirtualAlbumFile(album, RootFolder);
-                var viewModel = new VirtualAlbumFileViewModel();
-                viewModel.Prepare(albumFile);
-                viewModel.IsNameReadOnly = false;
-                ViewModels.Add(viewModel);
+                ViewModels.Add(new VirtualAlbumFileViewModel(albumFile) { IsNameReadOnly = false });
             }
         }
 

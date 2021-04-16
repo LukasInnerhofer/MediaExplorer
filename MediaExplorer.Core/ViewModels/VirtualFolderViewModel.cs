@@ -7,7 +7,7 @@ using MvvmCross;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class VirtualFolderViewModel : MvxViewModel<VirtualFolder>, IVirtualFileSystemObjectViewModel
+    public class VirtualFolderViewModel : MvxViewModel, IVirtualFileSystemObjectViewModel
     {
         private VirtualFolder _folder;
         private VirtualFolder Folder
@@ -45,14 +45,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand CancelRenameCommand =>
             _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
 
-        public VirtualFolderViewModel() : base()
+        public VirtualFolderViewModel(VirtualFolder folder) : base()
         {
+            Folder = folder;
             IsNameReadOnly = true;
-        }
-
-        public override void Prepare(VirtualFolder parameter)
-        {
-            Folder = parameter;
         }
 
         private void StartRename()

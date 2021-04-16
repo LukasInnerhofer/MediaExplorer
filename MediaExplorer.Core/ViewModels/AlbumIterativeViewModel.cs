@@ -6,7 +6,7 @@ using MediaExplorer.Core.Models;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class AlbumIterativeViewModel : MvxViewModel<Album>
+    public class AlbumIterativeViewModel : GeneralAlbumViewModel
     {
         private int _it;
         private int It
@@ -15,17 +15,6 @@ namespace MediaExplorer.Core.ViewModels
             set
             {
                 _it = value;
-                RaisePropertyChanged(nameof(MediaCollection));
-            }
-        }
-
-        private Album _album;
-        private Album Album
-        {
-            get { return _album; }
-            set
-            {
-                _album = value;
                 RaisePropertyChanged(nameof(MediaCollection));
             }
         }
@@ -50,11 +39,6 @@ namespace MediaExplorer.Core.ViewModels
         public AlbumIterativeViewModel()
         {
             It = 0;
-        }
-
-        public override void Prepare(Album parameter)
-        {
-            Album = parameter;
         }
     }
 }

@@ -9,6 +9,12 @@
     mc:Ignorable="d" 
     d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <local:MediaCollectionView DataContext="{Binding MediaCollection}"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <local:AlbumBarView Grid.Row="0" DataContext="{Binding .}"/>
+        <local:MediaCollectionView Grid.Row="1" DataContext="{Binding MediaCollection}"/>
     </Grid>
 </mvxviews:MvxWpfView>
