@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Models
 {
@@ -14,6 +15,12 @@ namespace MediaExplorer.Core.Models
         public Profile()
         {
             RootFolder = new VirtualFolder("root", null);
+        }
+
+        public async Task InitializeNonSerializedMembers(byte[] keyHash)
+        {
+            KeyHash = keyHash;
+            await RootFolder.InitializeNonSerializedMembers(keyHash);
         }
     }
 }

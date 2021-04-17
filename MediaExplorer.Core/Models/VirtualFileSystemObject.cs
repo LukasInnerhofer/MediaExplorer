@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Models
 {
@@ -54,7 +55,7 @@ namespace MediaExplorer.Core.Models
             Name = newName;
         }
 
-        public virtual void InitializeNonSerializedMembers()
+        public virtual async Task InitializeNonSerializedMembers(object param)
         {
 
         }

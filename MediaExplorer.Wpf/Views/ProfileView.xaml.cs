@@ -21,5 +21,15 @@ namespace MediaExplorer.Wpf.Views
         {
             ListView.SelectedItem = (sender as ListViewItem).DataContext;
         }
+
+        private void ListView_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            switch(e.Key)
+            {
+                case System.Windows.Input.Key.Return:
+                    (DataContext as ProfileViewModel).OpenCommand?.Execute();
+                    break;
+            }
+        }
     }
 }

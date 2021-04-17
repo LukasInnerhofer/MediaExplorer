@@ -105,7 +105,7 @@ namespace MediaExplorer.Core.ViewModels
         {
             if(IsNameReadOnly)
             {
-                Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new AlbumIterativeViewModel(), _albumFile.Album);
+                Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new IterativeAlbumViewModel(), _albumFile.Album);
             }
         }
     }

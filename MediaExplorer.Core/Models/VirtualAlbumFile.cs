@@ -1,8 +1,11 @@
-﻿using System;
+﻿using MediaExplorer.Core.Services;
+using MvvmCross;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Models
 {
@@ -11,6 +14,9 @@ namespace MediaExplorer.Core.Models
     {
         private string _realPath;
 
+        [NonSerialized]
+        byte[] _key;
+
         [field: NonSerialized]
         public Album Album { get; set; }
 
@@ -18,11 +24,17 @@ namespace MediaExplorer.Core.Models
         {
             Album = album;
             _realPath = Album.FilePath;
+            _key = Album.Key;
         }
 
-        public override void InitializeNonSerializedMembers()
+        public override async Task InitializeNonSerializedMembers(object param)
         {
-           // _album = Album.FromFilePath(_realPath);
+            _key = param as byte[];
+            using(var fs = new FileStream(_realPath, FileMode.Open))
+            {
+                Album = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Album>(fs, _key);
+                Album.InitializeNonSerializedMembers(_key, _realPath);
+            }
         }
     }
 }

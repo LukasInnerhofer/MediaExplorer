@@ -21,10 +21,10 @@ namespace MediaExplorer.Wpf.Views
     /// <summary>
     /// Interaction logic for AlbumIterativeView.xaml
     /// </summary>
-    [MvxViewFor(typeof(AlbumIterativeViewModel))]
-    public partial class AlbumIterativeView : MvxWpfView
+    [MvxViewFor(typeof(IterativeAlbumViewModel))]
+    public partial class IterativeAlbumView : MvxWpfView
     {
-        public AlbumIterativeView() : base()
+        public IterativeAlbumView() : base()
         {
             InitializeComponent();
         }

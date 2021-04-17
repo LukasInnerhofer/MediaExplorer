@@ -6,5 +6,6 @@ namespace MediaExplorer.Core.ViewModels
     public interface IVirtualFileSystemObjectViewModel
     {
         IMvxCommand StartRenameCommand { get; }
+        IMvxCommand OpenCommand { get; }
     }
 }

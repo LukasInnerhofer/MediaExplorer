@@ -66,6 +66,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand StartRenameCommand =>
             _startRenameCommand ?? (_startRenameCommand = new MvxCommand(StartRename, StartRenameCanExecute));
 
+        private IMvxCommand _openCommand;
+        public IMvxCommand OpenCommand =>
+            _openCommand ?? (_openCommand = new MvxCommand(Open));
+
         public ProfileViewModel()
         {
             _viewModels = new MvxObservableCollection<IVirtualFileSystemObjectViewModel>();
@@ -106,6 +110,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
                 var albumFile = new VirtualAlbumFile(album, RootFolder);
+                RootFolder.AddChild(albumFile);
                 ViewModels.Add(new VirtualAlbumFileViewModel(albumFile) { IsNameReadOnly = false });
             }
         }
@@ -118,6 +123,11 @@ namespace MediaExplorer.Core.ViewModels
         private bool StartRenameCanExecute()
         {
             return SelectedViewModel != null && SelectedViewModel.StartRenameCommand.CanExecute();
+        }
+
+        private void Open()
+        {
+            SelectedViewModel.OpenCommand?.Execute();
         }
     }
 }

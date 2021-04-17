@@ -22,7 +22,7 @@ namespace MediaExplorer.Wpf.Views
     /// <summary>
     /// Interaction logic for AlbumBarView.xaml
     /// </summary>
-    [MvxViewFor(typeof(GeneralAlbumViewModel))]
+    [MvxViewFor(typeof(CommonAlbumViewModel))]
     public partial class AlbumBarView : MvxWpfView
     {
         private IMvxCommand _addMediaFromHtmlCommand;

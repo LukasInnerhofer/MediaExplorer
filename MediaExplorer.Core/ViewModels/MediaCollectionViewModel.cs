@@ -9,10 +9,11 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class MediaCollectionViewModel : MvxViewModel<Tuple<MediaCollection, string, byte[]>>
+    public class MediaCollectionViewModel : MvxViewModel
     {
         private int _it;
         private int It
@@ -63,41 +64,28 @@ namespace MediaExplorer.Core.ViewModels
                     return "placeholder.png";
                 }
 
-                string url = $"http://127.0.0.1:12345/{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
-
-                if(_httpThread != null && _httpThread.IsAlive)
-                {
-                    _httpThread.Join();
-                }
-                var threadStart = new ThreadStart(delegate ()
-                {
-                    _httpListener = new HttpListener();
-                    _httpListener.Prefixes.Add(url);
-                    _httpListener.Start();
-                    HttpListenerContext context = _httpListener.GetContext();
-                    Stream responseStream = context.Response.OutputStream;
-                    using(var fileStream = new FileStream(Media.Path, FileMode.Open))
-                    {
-                        Mvx.IoCProvider.Resolve<ICryptographyService>().DecryptAsync(fileStream, responseStream, _key).Wait();
-                    }
-                    responseStream.Close();
-                    _httpListener.Stop();
-                });
-                _httpThread = new Thread(threadStart);
-                _httpThread.Start();
-
-                return url;
+                Mvx.IoCProvider.Resolve<IHttpListenerService>().Register(
+                    $"{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/",
+                    httpMediaRequest);
+                return $"http://127.0.0.1:12345/{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
             }
         }
 
-        private HttpListener _httpListener;
-        private Thread _httpThread;
-
-        public override void Prepare(Tuple<MediaCollection, string, byte[]> parameter)
+        public MediaCollectionViewModel(MediaCollection mediaCollection, string albumName, byte[] key)
         {
-            MediaCollection = parameter.Item1;
-            _albumName = parameter.Item2;
-            _key = parameter.Item3;
+            MediaCollection = mediaCollection;
+            _albumName = albumName;
+            _key = key;
+        }
+
+        private void httpMediaRequest(HttpListenerContext context)
+        {
+            Stream responseStream = context.Response.OutputStream;
+            using (var fileStream = new FileStream(Media.Path, FileMode.Open))
+            {
+                Mvx.IoCProvider.Resolve<ICryptographyService>().DecryptAsync(fileStream, responseStream, _key).Wait();
+            }
+            responseStream.Close();
         }
     }
 }

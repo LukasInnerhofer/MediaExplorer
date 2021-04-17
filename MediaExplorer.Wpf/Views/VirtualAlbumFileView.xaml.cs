@@ -51,15 +51,5 @@ namespace MediaExplorer.Wpf.Views
                 TextBox.SelectAll();
             }
         }
-
-        private void RootPanel_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            switch(e.Key)
-            {
-                case Key.Return:
-                    (DataContext as VirtualAlbumFileViewModel).OpenCommand?.Execute();
-                    break;
-            }
-        }
     }
 }

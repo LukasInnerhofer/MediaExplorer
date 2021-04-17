@@ -53,7 +53,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 byte[] keyHash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key));
                 profile = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Models.Profile>(fs, keyHash);
-                profile.KeyHash = keyHash;
+                await profile.InitializeNonSerializedMembers(keyHash);
             }
             
             await Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new ProfileViewModel(), profile);

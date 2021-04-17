@@ -27,7 +27,12 @@
             </MenuItem>
         </Menu>
 
-        <ListView Grid.Row="1" ItemsSource="{Binding ViewModels}" SelectedItem="{Binding SelectedViewModel}" Name="ListView">
+        <ListView 
+            Grid.Row="1" 
+            ItemsSource="{Binding ViewModels}" 
+            SelectedItem="{Binding SelectedViewModel}" 
+            Name="ListView" 
+            PreviewKeyDown="ListView_PreviewKeyDown">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="PreviewGotKeyboardFocus" Handler="ListViewItem_PreviewGotKeyboardFocus"/>

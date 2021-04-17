@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MediaExplorer.Core.Models;
+using MvvmCross.Commands;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class AlbumIterativeViewModel : GeneralAlbumViewModel
+    public class IterativeAlbumViewModel : CommonAlbumViewModel
     {
         private int _it;
         private int It
@@ -29,16 +30,29 @@ namespace MediaExplorer.Core.ViewModels
                 }
                 else
                 {
-                    var vm = new MediaCollectionViewModel();
-                    vm.Prepare(new Tuple<MediaCollection, string, byte[]>(Album.MediaCollections[It], Album.Name, Album.Key));
-                    return vm;
+                    return new MediaCollectionViewModel(Album.MediaCollections[It], Album.Name, Album.Key);
                 }
             }
         }
 
-        public AlbumIterativeViewModel()
+        private IMvxCommand _navigateNextCommand;
+        public IMvxCommand NavigateNextCommand =>
+            _navigateNextCommand ?? (_navigateNextCommand = new MvxCommand(NavigateNext, NavigateNextCanExecute));
+
+        public IterativeAlbumViewModel()
         {
             It = 0;
+        }
+
+        private void NavigateNext()
+        {
+            ++It;
+            RaisePropertyChanged(nameof(MediaCollection));
+        }
+
+        private bool NavigateNextCanExecute()
+        {
+            return It < Album.MediaCollections.Count - 1;
         }
     }
 }

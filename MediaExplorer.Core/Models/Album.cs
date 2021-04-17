@@ -27,7 +27,7 @@ namespace MediaExplorer.Core.Models
         private List<MediaCollection> _mediaCollections;
         public IReadOnlyList<MediaCollection> MediaCollections { get { return _mediaCollections; } }
 
-        public Album()
+        private Album()
         {
             Name = string.Empty;
             FilePath = string.Empty;
@@ -45,7 +45,19 @@ namespace MediaExplorer.Core.Models
             await album.FindMediaAsync(basePath);
             await album.FindMediaCollectionsAsync(basePath);
 
+            album.FilePath = album._basePath + Path.DirectorySeparatorChar + "album";
+            using (var fs = new FileStream(album.FilePath, FileMode.Create))
+            {
+                await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, album, album._key);
+            }
+
             return album;
+        }
+
+        public void InitializeNonSerializedMembers(byte[] key, string filePath)
+        {
+            _key = key;
+            FilePath = filePath;
         }
 
         private async Task FindMediaAsync(string path)
@@ -75,7 +87,7 @@ namespace MediaExplorer.Core.Models
 
         private async Task FindMediaCollectionsAsync(string path)
         {
-            var media = new List<Media>();
+            var files = new List<string>();
             byte[] fileHash;
             string encryptedDirPath;
             string encryptedFilePath;
@@ -109,7 +121,7 @@ namespace MediaExplorer.Core.Models
                             }
                         }
 
-                        media.Add(new Media(encryptedFilePath));
+                        files.Add(encryptedFilePath);
                     }
 
                     collectionName = BitConverter.ToString(
@@ -117,9 +129,15 @@ namespace MediaExplorer.Core.Models
                     Directory.Move(encryptedDirPath, Path.GetDirectoryName(encryptedDirPath) + Path.DirectorySeparatorChar +
                             collectionName);
                 }
-                if (media.Count > 0)
+                if (files.Count > 0)
                 {
+                    List<Media> media = new List<Media>();
+                    foreach(string file in files)
+                    {
+                        media.Add(new Media(file.Replace(folder.Split(Path.DirectorySeparatorChar).Last(), collectionName)));
+                    }
                     _mediaCollections.Add(new MediaCollection(collectionName, media));
+                    files.Clear();
                 }
             }
         }

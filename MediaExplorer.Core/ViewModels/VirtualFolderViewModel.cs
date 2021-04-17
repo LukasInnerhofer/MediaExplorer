@@ -45,6 +45,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand CancelRenameCommand =>
             _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
 
+        private IMvxCommand _openCommand;
+        public IMvxCommand OpenCommand =>
+            _openCommand ?? (_openCommand = new MvxCommand(Open));
+
         public VirtualFolderViewModel(VirtualFolder folder) : base()
         {
             Folder = folder;
@@ -88,6 +92,11 @@ namespace MediaExplorer.Core.ViewModels
         {
             Name = Folder.Name;
             IsNameReadOnly = true;
+        }
+
+        private void Open()
+        {
+
         }
     }
 }

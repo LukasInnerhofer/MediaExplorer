@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Models
 {
@@ -22,6 +23,14 @@ namespace MediaExplorer.Core.Models
             }
             _children.Add(child);
             return true;
+        }
+
+        public override async Task InitializeNonSerializedMembers(object param)
+        {
+            foreach(VirtualFileSystemObject child in Children)
+            {
+                await child.InitializeNonSerializedMembers(param);
+            }
         }
     }
 }
