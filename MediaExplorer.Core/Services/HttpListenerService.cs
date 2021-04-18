@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,9 +31,18 @@ namespace MediaExplorer.Core.Services
                     HttpListenerContext context = _httpListener.GetContext();
                     lock (_observers)
                     {
+                        string relativePath = context.Request.Url.AbsoluteUri.Replace("http://127.0.0.1:12345/", "");
+
+                        if(relativePath == "Exit")
+                        {
+                            _listen = false;
+                            context.Response.OutputStream.Close();
+                            _httpListener.Stop();
+                            _httpListener.Close();
+                        }
+
                         foreach (Tuple<string, Action<HttpListenerContext>> observer in _observers)
                         {
-                            string relativePath = context.Request.Url.AbsoluteUri.Replace("http://127.0.0.1:12345/", "");
                             if (relativePath.Length >= observer.Item1.Length)
                             {
                                 if (relativePath.Substring(0, observer.Item1.Length) == observer.Item1)
@@ -53,6 +63,16 @@ namespace MediaExplorer.Core.Services
             lock(_observers)
             {
                 _observers.Add(new Tuple<string, Action<HttpListenerContext>>(url, cb));
+            }
+        }
+
+        public void Exit()
+        {
+            if(_httpListener != null)
+            {
+                HttpClient client = new HttpClient();
+                client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "http://127.0.0.1:12345/Exit")).Wait();
+                _httpThread.Join();
             }
         }
     }

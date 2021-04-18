@@ -5,8 +5,9 @@ using System.Text;
 
 namespace MediaExplorer.Core.Services
 {
-    interface IHttpListenerService
+    public interface IHttpListenerService
     {
         void Register(string url, Action<HttpListenerContext> cb);
+        void Exit();
     }
 }

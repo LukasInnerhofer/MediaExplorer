@@ -19,7 +19,7 @@ namespace MediaExplorer.Wpf
 
         private void MvxApplication_Exit(object sender, System.Windows.ExitEventArgs e)
         {
-
+            Mvx.IoCProvider.Resolve<IHttpListenerService>().Exit();
         }
     }
 }
