@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:MediaExplorer.Wpf"
     xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
-    StartupUri="MainWindow.xaml">
+    StartupUri="MainWindow.xaml"
+    Exit="MvxApplication_Exit">
     <mvxviews:MvxApplication.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

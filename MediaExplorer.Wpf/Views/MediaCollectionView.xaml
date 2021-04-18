@@ -4,10 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
+             xmlns:converters="clr-namespace:MediaExplorer.Core.Converters;assembly=MediaExplorer.Core"
+             xmlns:wpfconverters="clr-namespace:MediaExplorer.Wpf.Converters"
              xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <mvxviews:MvxWpfView.Resources>
+        <wpfconverters:ImageSupportsMediaConverter x:Key="ImageSupportsMediaConverter"/>
+        <wpfconverters:MediaElementSupportsMediaConverter x:Key="MediaElementSupportsMediaConverter"/>
+    </mvxviews:MvxWpfView.Resources>
     <Grid>
-        <MediaElement Source="{Binding MediaUrl}"/>
+        <MediaElement 
+            Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=MediaElementSupportsMediaConverter}}"
+            Source="{Binding MediaUrl}"/>
+        <Image
+            Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=ImageSupportsMediaConverter}}"
+            Source="{Binding MediaUrl}"/>
     </Grid>
 </mvxviews:MvxWpfView>

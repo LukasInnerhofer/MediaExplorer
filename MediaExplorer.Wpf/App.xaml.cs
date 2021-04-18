@@ -16,5 +16,10 @@ namespace MediaExplorer.Wpf
         {
             this.RegisterSetupType<MvxWpfSetup<Core.App>>();
         }
+
+        private void MvxApplication_Exit(object sender, System.Windows.ExitEventArgs e)
+        {
+
+        }
     }
 }

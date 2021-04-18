@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Services
 {
@@ -12,27 +13,32 @@ namespace MediaExplorer.Core.Services
 
         HttpListener _httpListener;
         Thread _httpThread;
+        bool _listen;
 
         public HttpListenerService()
         {
             _observers = new List<Tuple<string, Action<HttpListenerContext>>>();
+            _listen = true;
 
             var threadStart = new ThreadStart(delegate ()
             {
                 _httpListener = new HttpListener();
                 _httpListener.Prefixes.Add("http://127.0.0.1:12345/");
                 _httpListener.Start();
-                while (true)
+                while (_listen)
                 {
                     HttpListenerContext context = _httpListener.GetContext();
-                    foreach(Tuple<string, Action<HttpListenerContext>> observer in _observers)
+                    lock (_observers)
                     {
-                        string relativePath = context.Request.Url.AbsoluteUri.Replace("http://127.0.0.1:12345/", "");
-                        if(relativePath.Length >= observer.Item1.Length)
+                        foreach (Tuple<string, Action<HttpListenerContext>> observer in _observers)
                         {
-                            if (relativePath.Substring(0, observer.Item1.Length) == observer.Item1)
+                            string relativePath = context.Request.Url.AbsoluteUri.Replace("http://127.0.0.1:12345/", "");
+                            if (relativePath.Length >= observer.Item1.Length)
                             {
-                                observer.Item2.Invoke(context);
+                                if (relativePath.Substring(0, observer.Item1.Length) == observer.Item1)
+                                {
+                                    observer.Item2.Invoke(context);
+                                }
                             }
                         }
                     }
@@ -44,7 +50,10 @@ namespace MediaExplorer.Core.Services
 
         public void Register(string url, Action<HttpListenerContext> cb)
         {
-            _observers.Add(new Tuple<string, Action<HttpListenerContext>>(url, cb));
+            lock(_observers)
+            {
+                _observers.Add(new Tuple<string, Action<HttpListenerContext>>(url, cb));
+            }
         }
     }
 }

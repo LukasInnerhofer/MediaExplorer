@@ -66,7 +66,7 @@ namespace MediaExplorer.Core.ViewModels
 
                 Mvx.IoCProvider.Resolve<IHttpListenerService>().Register(
                     $"{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/",
-                    httpMediaRequest);
+                    HttpMediaRequest);
                 return $"http://127.0.0.1:12345/{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
             }
         }
@@ -78,12 +78,21 @@ namespace MediaExplorer.Core.ViewModels
             _key = key;
         }
 
-        private void httpMediaRequest(HttpListenerContext context)
+        private void HttpMediaRequest(HttpListenerContext context)
         {
             Stream responseStream = context.Response.OutputStream;
             using (var fileStream = new FileStream(Media.Path, FileMode.Open))
             {
                 Mvx.IoCProvider.Resolve<ICryptographyService>().DecryptAsync(fileStream, responseStream, _key).Wait();
+
+                
+            }
+            using (var fileStream = new FileStream(Media.Path, FileMode.Open))
+            {
+                using (var outStream = new FileStream(Media.Path.Split(Path.DirectorySeparatorChar).Last(), FileMode.Create))
+                {
+                    Mvx.IoCProvider.Resolve<ICryptographyService>().DecryptAsync(fileStream, outStream, _key).Wait();
+                }
             }
             responseStream.Close();
         }
