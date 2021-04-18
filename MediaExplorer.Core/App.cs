@@ -13,7 +13,6 @@ namespace MediaExplorer.Core
                 EndingWith("Service").
                 AsInterfaces().
                 RegisterAsLazySingleton();
-            // The previous line does not register Services with generic type parameters
             Mvx.IoCProvider.RegisterSingleton<Services.ICryptographyService>(new Services.CryptographyService(Aes.Create(), SHA256.Create()));
 
             RegisterCustomAppStart<AppStart>();
