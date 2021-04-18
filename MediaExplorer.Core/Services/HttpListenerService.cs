@@ -14,19 +14,18 @@ namespace MediaExplorer.Core.Services
 
         HttpListener _httpListener;
         Thread _httpThread;
-        bool _listen;
+        bool _exit = false;
 
         public HttpListenerService()
         {
             _observers = new List<Tuple<string, Action<HttpListenerContext>>>();
-            _listen = true;
 
             var threadStart = new ThreadStart(delegate ()
             {
                 _httpListener = new HttpListener();
                 _httpListener.Prefixes.Add("http://127.0.0.1:12345/");
                 _httpListener.Start();
-                while (_listen)
+                while (!_exit)
                 {
                     HttpListenerContext context = _httpListener.GetContext();
                     lock (_observers)
@@ -35,10 +34,10 @@ namespace MediaExplorer.Core.Services
 
                         if(relativePath == "Exit")
                         {
-                            _listen = false;
                             context.Response.OutputStream.Close();
                             _httpListener.Stop();
                             _httpListener.Close();
+                            break;
                         }
 
                         foreach (Tuple<string, Action<HttpListenerContext>> observer in _observers)
@@ -68,7 +67,8 @@ namespace MediaExplorer.Core.Services
 
         public void Exit()
         {
-            if(_httpListener != null)
+            _exit = true;
+            if (_httpListener != null)
             {
                 HttpClient client = new HttpClient();
                 client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "http://127.0.0.1:12345/Exit")).Wait();
