@@ -109,6 +109,7 @@ namespace MediaExplorer.Core.Models
                         using (var src = new FileStream(file, FileMode.Open))
                         {
                             fileHash = await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(src);
+                            src.Seek(0, SeekOrigin.Begin);
                             folderHashStream.Write(fileHash, 0, fileHash.Length);
 
                             encryptedFilePath += Path.DirectorySeparatorChar +
