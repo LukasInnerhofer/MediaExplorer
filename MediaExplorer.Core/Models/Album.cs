@@ -2,6 +2,8 @@
 using MvvmCross;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -24,14 +26,14 @@ namespace MediaExplorer.Core.Models
 
         private string _basePath;
 
-        private List<MediaCollection> _mediaCollections;
-        public IReadOnlyList<MediaCollection> MediaCollections { get { return _mediaCollections; } }
+        private ObservableCollection<MediaCollection> _mediaCollections;
+        public ReadOnlyObservableCollection<MediaCollection> MediaCollections { get { return new ReadOnlyObservableCollection<MediaCollection>(_mediaCollections); } }
 
         private Album()
         {
             Name = string.Empty;
             FilePath = string.Empty;
-            _mediaCollections = new List<MediaCollection>();
+            _mediaCollections = new ObservableCollection<MediaCollection>();
         }
 
         public static async Task<Album> FromBasePathAsync(string basePath, byte[] key)

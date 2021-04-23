@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using MediaExplorer.Core.Models;
 using MvvmCross.Commands;
+using System.Collections.Specialized;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -17,6 +18,8 @@ namespace MediaExplorer.Core.ViewModels
             {
                 _it = value;
                 RaisePropertyChanged(nameof(MediaCollection));
+                NavigateNextCommand.RaiseCanExecuteChanged();
+                NavigatePreviousCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -39,20 +42,45 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand NavigateNextCommand =>
             _navigateNextCommand ?? (_navigateNextCommand = new MvxCommand(NavigateNext, NavigateNextCanExecute));
 
+        private IMvxCommand _navigatePreviousCommand;
+        public IMvxCommand NavigatePreviousCommand =>
+            _navigatePreviousCommand ?? (_navigatePreviousCommand = new MvxCommand(NavigatePrevious, NavigatePreviousCanExecute));
+
         public IterativeAlbumViewModel()
         {
             It = 0;
         }
 
+        public override void Prepare(Album parameter)
+        {
+            Album = parameter;
+            ((INotifyCollectionChanged)Album.MediaCollections).CollectionChanged += MediaCollectionsChanged;
+        }
+
+        private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            NavigateNextCommand.RaiseCanExecuteChanged();
+            NavigatePreviousCommand.RaiseCanExecuteChanged();
+        }
+
         private void NavigateNext()
         {
             ++It;
-            RaisePropertyChanged(nameof(MediaCollection));
         }
 
         private bool NavigateNextCanExecute()
         {
             return It < Album.MediaCollections.Count - 1;
+        }
+
+        private void NavigatePrevious()
+        {
+            --It;
+        }
+
+        private bool NavigatePreviousCanExecute()
+        {
+            return It > 0;
         }
     }
 }

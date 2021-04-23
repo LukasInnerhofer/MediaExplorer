@@ -20,7 +20,8 @@
 
         <local:AlbumBarView Grid.ColumnSpan="2" Grid.Row="0" DataContext="{Binding .}"/>
         <WrapPanel Grid.Column="1" Grid.Row="0">
-            <Button Command="{Binding NavigateNextCommand}">>></Button>
+            <Button Command="{Binding NavigatePreviousCommand}" Content="&lt;&lt;"/>
+            <Button Command="{Binding NavigateNextCommand}" Content="&gt;&gt;"/>
         </WrapPanel>
         <local:MediaCollectionView Grid.ColumnSpan="2" Grid.Row="1" DataContext="{Binding MediaCollection}"/>
     </Grid>

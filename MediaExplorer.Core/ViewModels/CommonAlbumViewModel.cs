@@ -33,11 +33,6 @@ namespace MediaExplorer.Core.ViewModels
 
         }
 
-        public override void Prepare(Album parameter)
-        {
-            Album = parameter;
-        }
-
         private async Task AddMediaFromHttpAsync()
         {
             await Album.AddMedia(
