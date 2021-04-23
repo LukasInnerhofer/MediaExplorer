@@ -13,7 +13,7 @@ using MvvmCross.Navigation;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class VirtualAlbumFileViewModel : MvxViewModel, IVirtualFileSystemObjectViewModel
+    public class VirtualAlbumFileViewModel : VirtualFileSystemObjectViewModel
     {
         private VirtualAlbumFile _albumFile;
         private VirtualAlbumFile AlbumFile
@@ -33,17 +33,6 @@ namespace MediaExplorer.Core.ViewModels
             set { SetProperty(ref _name, value); }
         }
 
-        private bool _isNameReadOnly;
-        public bool IsNameReadOnly
-        {
-            get { return _isNameReadOnly; }
-            set { SetProperty(ref _isNameReadOnly, value); }
-        }
-
-        private IMvxCommand _startRenameCommand;
-        public IMvxCommand StartRenameCommand =>
-            _startRenameCommand ?? (_startRenameCommand = new MvxCommand(StartRename, StartRenameCanExecute));
-
         private IMvxCommand _confirmRenameCommand;
         public IMvxCommand ConfirmRenameCommand =>
             _confirmRenameCommand ?? (_confirmRenameCommand = new MvxCommand(ConfirmRename));
@@ -60,16 +49,6 @@ namespace MediaExplorer.Core.ViewModels
         {
             AlbumFile = albumFile;
             IsNameReadOnly = true;
-        }
-
-        private void StartRename()
-        {
-            IsNameReadOnly = false;
-        }
-
-        private bool StartRenameCanExecute()
-        {
-            return IsNameReadOnly;
         }
 
         private void ConfirmRename()

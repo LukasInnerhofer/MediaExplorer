@@ -7,13 +7,13 @@ using MvvmCross;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class VirtualFolderViewModel : MvxViewModel, IVirtualFileSystemObjectViewModel
+    public class VirtualFolderViewModel : VirtualFileSystemObjectViewModel
     {
         private VirtualFolder _folder;
-        private VirtualFolder Folder
+        public VirtualFolder Folder
         {
             get { return _folder; }
-            set
+            private set
             {
                 _folder = value;
                 Name = _folder.Name;
@@ -26,16 +26,6 @@ namespace MediaExplorer.Core.ViewModels
             get { return _name; }
             set { SetProperty(ref _name, value); }
         }
-        private bool _isNameReadOnly;
-        public bool IsNameReadOnly 
-        { 
-            get { return _isNameReadOnly; } 
-            set { SetProperty(ref _isNameReadOnly, value); }
-        }
-
-        private IMvxCommand _startRenameCommand;
-        public IMvxCommand StartRenameCommand =>
-            _startRenameCommand ?? (_startRenameCommand = new MvxCommand(StartRename, StartRenameCanExecute));
 
         private IMvxCommand _confirmRenameCommand;
         public IMvxCommand ConfirmRenameCommand =>
@@ -45,24 +35,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand CancelRenameCommand =>
             _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
 
-        private IMvxCommand _openCommand;
-        public IMvxCommand OpenCommand =>
-            _openCommand ?? (_openCommand = new MvxCommand(Open));
-
         public VirtualFolderViewModel(VirtualFolder folder) : base()
         {
             Folder = folder;
             IsNameReadOnly = true;
-        }
-
-        private void StartRename()
-        {
-            IsNameReadOnly = false;
-        }
-
-        private bool StartRenameCanExecute()
-        {
-            return IsNameReadOnly;
         }
 
         private void ConfirmRename()
@@ -92,11 +68,6 @@ namespace MediaExplorer.Core.ViewModels
         {
             Name = Folder.Name;
             IsNameReadOnly = true;
-        }
-
-        private void Open()
-        {
-
         }
     }
 }

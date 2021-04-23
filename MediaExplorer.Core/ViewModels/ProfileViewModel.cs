@@ -36,15 +36,15 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        private MvxObservableCollection<IVirtualFileSystemObjectViewModel> _viewModels;
-        public MvxObservableCollection<IVirtualFileSystemObjectViewModel> ViewModels
+        private MvxObservableCollection<VirtualFileSystemObjectViewModel> _viewModels;
+        public MvxObservableCollection<VirtualFileSystemObjectViewModel> ViewModels
         {
             get { return _viewModels; }
             set { SetProperty(ref _viewModels, value); }
         }
 
-        private IVirtualFileSystemObjectViewModel _selectedViewModel;
-        public IVirtualFileSystemObjectViewModel SelectedViewModel 
+        private VirtualFileSystemObjectViewModel _selectedViewModel;
+        public VirtualFileSystemObjectViewModel SelectedViewModel 
         {
             get { return _selectedViewModel; }
             set { SetProperty(ref _selectedViewModel, value); }
@@ -72,7 +72,7 @@ namespace MediaExplorer.Core.ViewModels
 
         public ProfileViewModel()
         {
-            _viewModels = new MvxObservableCollection<IVirtualFileSystemObjectViewModel>();
+            _viewModels = new MvxObservableCollection<VirtualFileSystemObjectViewModel>();
         }
 
         public override void Prepare(Profile parameter)
@@ -127,7 +127,17 @@ namespace MediaExplorer.Core.ViewModels
 
         private void Open()
         {
-            SelectedViewModel.OpenCommand?.Execute();
+            if(SelectedViewModel is VirtualAlbumFileViewModel)
+            {
+                (SelectedViewModel as VirtualAlbumFileViewModel).OpenCommand?.Execute();
+            }
+            else
+            {
+                if(SelectedViewModel.IsNameReadOnly)
+                {
+                    RootFolder = (SelectedViewModel as VirtualFolderViewModel).Folder;
+                }
+            }
         }
     }
 }
