@@ -52,12 +52,24 @@ namespace MediaExplorer.Core.ViewModels
                 _thread.Join();
             }
 
+            public void Cancel()
+            {
+                _thread.Abort();
+            }
+
             private void ReadStream()
             {
-                WebClient client = new WebClient();
-                client.OpenRead(Url).CopyTo(Stream);
-                Stream.Seek(0, SeekOrigin.Begin);
-                Done = true;
+                try
+                {
+                    WebClient client = new WebClient();
+                    client.OpenRead(Url).CopyTo(Stream);
+                    Stream.Seek(0, SeekOrigin.Begin);
+                    Done = true;
+                }
+                catch(ThreadAbortException _)
+                {
+
+                }
             }
 
             private void RaisePropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string propertyName = "")
@@ -93,6 +105,10 @@ namespace MediaExplorer.Core.ViewModels
         private IMvxCommand _okCommand;
         public IMvxCommand OkCommand =>
             _okCommand ?? (_okCommand = new MvxCommand(Ok, OkCanExecute));
+
+        private IMvxCommand _cancelCommand;
+        public IMvxCommand CancelCommand => 
+            _cancelCommand ?? (_cancelCommand = new MvxCommand(Cancel));
 
         public MvxObservableCollection<string> Urls { get; private set; }
 
@@ -137,6 +153,18 @@ namespace MediaExplorer.Core.ViewModels
                 }
             }
             return true;
+        }
+
+        private void Cancel()
+        {
+            foreach(var job in _jobs)
+            {
+                if(!job.Done)
+                {
+                    job.Cancel();
+                }
+            }
+            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this, new List<KeyValuePair<string, MemoryStream>>());
         }
 
         private void OnUrlsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
