@@ -22,7 +22,7 @@ namespace MediaExplorer.Core.Models
         [field: NonSerialized]
         public string FilePath { get; private set; }
 
-        private string _basePath { get; set; }
+        private string _basePath;
 
         private List<MediaCollection> _mediaCollections;
         public IReadOnlyList<MediaCollection> MediaCollections { get { return _mediaCollections; } }
@@ -58,6 +58,21 @@ namespace MediaExplorer.Core.Models
         {
             _key = key;
             FilePath = filePath;
+        }
+
+        public async Task AddMedia(List<KeyValuePair<string, MemoryStream>> streams)
+        {
+            foreach(var source in streams)
+            {
+                string hash = BitConverter.ToString(await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(source.Value)).Replace("-", "");
+                source.Value.Seek(0, SeekOrigin.Begin);
+                string fileName = _basePath + Path.DirectorySeparatorChar + "media" + Path.DirectorySeparatorChar + hash + "." + source.Key;
+                using(var fs = new FileStream(fileName, FileMode.Create))
+                {
+                    await Mvx.IoCProvider.Resolve<ICryptographyService>().EncryptAsync(source.Value, fs, _key);
+                }
+                _mediaCollections.Add(new MediaCollection(hash, new Media(fileName)));
+            }
         }
 
         private async Task FindMediaAsync(string path)

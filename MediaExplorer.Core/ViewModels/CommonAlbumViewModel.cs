@@ -1,8 +1,11 @@
 ﻿using MediaExplorer.Core.Models;
+using MvvmCross;
 using MvvmCross.Commands;
+using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,9 +24,9 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        private IMvxCommand _addMediaFromHtmlCommand;
-        public IMvxCommand AddMediaFromHtmlCommand =>
-            _addMediaFromHtmlCommand ?? (_addMediaFromHtmlCommand = new MvxAsyncCommand(AddMediaFromHtmlAsync));
+        private IMvxCommand _addMediaFromHttpCommand;
+        public IMvxCommand AddMediaFromHttpCommand =>
+            _addMediaFromHttpCommand ?? (_addMediaFromHttpCommand = new MvxAsyncCommand(AddMediaFromHttpAsync));
 
         public CommonAlbumViewModel()
         {
@@ -35,9 +38,11 @@ namespace MediaExplorer.Core.ViewModels
             Album = parameter;
         }
 
-        private async Task AddMediaFromHtmlAsync()
+        private async Task AddMediaFromHttpAsync()
         {
-
+            await Album.AddMedia(
+                await Mvx.IoCProvider.Resolve<IMvxNavigationService>().
+                Navigate<HttpSourceDialogViewModel, object, List<KeyValuePair<string, MemoryStream>>>(null));
         }
     }
 }
