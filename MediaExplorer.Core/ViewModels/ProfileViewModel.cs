@@ -4,6 +4,7 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 SetProperty(ref _rootFolder, value);
 
+                ((INotifyCollectionChanged)RootFolder.Children).CollectionChanged += ChildrenChanged;
                 ViewModels.Clear();
                 foreach(VirtualFileSystemObject child in RootFolder.Children)
                 {
@@ -35,6 +37,24 @@ namespace MediaExplorer.Core.ViewModels
                 }
 
                 NavigateParentCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        private void ChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if(e.NewItems != null)
+            {
+                foreach(VirtualFileSystemObject o in e.NewItems)
+                {
+                    if(o is VirtualFolder)
+                    {
+                        ViewModels.Add(new VirtualFolderViewModel(o as VirtualFolder) { IsNameReadOnly = false });
+                    }
+                    else
+                    {
+                        ViewModels.Add(new VirtualAlbumFileViewModel(o as VirtualAlbumFile) { IsNameReadOnly = false });
+                    }
+                }
             }
         }
 
@@ -113,8 +133,6 @@ namespace MediaExplorer.Core.ViewModels
                 folder = new VirtualFolder(name, RootFolder);
                 name = $"New Folder {counter++}";
             } while (!RootFolder.AddChild(folder));
-
-            ViewModels.Add(new VirtualFolderViewModel(folder) { IsNameReadOnly = false });
         }
 
         private async Task NewAlbumAsync()
@@ -125,7 +143,6 @@ namespace MediaExplorer.Core.ViewModels
                 var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
                 var albumFile = new VirtualAlbumFile(album, RootFolder);
                 RootFolder.AddChild(albumFile);
-                ViewModels.Add(new VirtualAlbumFileViewModel(albumFile) { IsNameReadOnly = false });
             }
         }
 

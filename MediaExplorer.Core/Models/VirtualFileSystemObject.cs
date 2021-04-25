@@ -13,8 +13,8 @@ namespace MediaExplorer.Core.Models
         public string Name { get; protected set; }
         public VirtualFolder Parent { get; private set; }
 
-        protected List<VirtualFileSystemObject> _children;
-        public ReadOnlyCollection<VirtualFileSystemObject> Children { get { return new ReadOnlyCollection<VirtualFileSystemObject>(_children); } }
+        protected ObservableCollection<VirtualFileSystemObject> _children;
+        public ReadOnlyObservableCollection<VirtualFileSystemObject> Children { get { return new ReadOnlyObservableCollection<VirtualFileSystemObject>(_children); } }
 
         protected List<VirtualFileSystemObject> Siblings
         {
@@ -39,7 +39,7 @@ namespace MediaExplorer.Core.Models
             }
             Name = name;
             Parent = parent;
-            _children = new List<VirtualFileSystemObject>();
+            _children = new ObservableCollection<VirtualFileSystemObject>();
         }
 
         public void Rename(string newName)
