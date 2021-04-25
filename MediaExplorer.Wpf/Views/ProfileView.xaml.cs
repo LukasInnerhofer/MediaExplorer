@@ -31,5 +31,10 @@ namespace MediaExplorer.Wpf.Views
                     break;
             }
         }
+
+        private void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            (DataContext as ProfileViewModel).OpenCommand?.Execute();
+        }
     }
 }

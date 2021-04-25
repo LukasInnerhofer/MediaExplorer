@@ -33,7 +33,8 @@
             ItemsSource="{Binding ViewModels}" 
             SelectedItem="{Binding SelectedViewModel}" 
             Name="ListView" 
-            PreviewKeyDown="ListView_PreviewKeyDown">
+            PreviewKeyDown="ListView_PreviewKeyDown"
+            PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <EventSetter Event="PreviewGotKeyboardFocus" Handler="ListViewItem_PreviewGotKeyboardFocus"/>
