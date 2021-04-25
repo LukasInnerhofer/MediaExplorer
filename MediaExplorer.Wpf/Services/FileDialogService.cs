@@ -9,9 +9,14 @@ namespace MediaExplorer.Wpf.Services
 {
     public class FileDialogService : IFileDialogService
     {
-        public IOpenFolderDialog GetOpenFileDialog()
+        public IOpenFolderDialog GetOpenFolderDialog()
         {
             return new OpenFolderDialog();
+        }
+
+        public IOpenFileDialog GetOpenFileDialog()
+        {
+            return new OpenFileDialog();
         }
     }
 }

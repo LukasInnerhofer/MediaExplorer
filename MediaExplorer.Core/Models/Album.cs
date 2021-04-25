@@ -77,6 +77,24 @@ namespace MediaExplorer.Core.Models
             }
         }
 
+        public async Task AddMedia(List<string> files)
+        {
+            foreach(string file in files)
+            {
+                using (var fs = new FileStream(file, FileMode.Open))
+                {
+                    string hash = BitConverter.ToString(await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(fs)).Replace("-", "");
+                    fs.Seek(0, SeekOrigin.Begin);
+                    string fileName = _basePath + Path.DirectorySeparatorChar + "media" + Path.DirectorySeparatorChar + hash + "." + file.Split('.').Last();
+                    using (var outStream = new FileStream(fileName, FileMode.Create))
+                    {
+                        await Mvx.IoCProvider.Resolve<ICryptographyService>().EncryptAsync(fs, outStream, _key);
+                    }
+                    _mediaCollections.Add(new MediaCollection(hash, new Media(fileName)));
+                }
+            }
+        }
+
         public async Task SaveAsync()
         {
             using(var fs = new FileStream(FilePath, FileMode.Create))

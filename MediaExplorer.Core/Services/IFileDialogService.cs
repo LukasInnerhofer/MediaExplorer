@@ -7,6 +7,7 @@ namespace MediaExplorer.Core.Services
 {
     public interface IFileDialogService
     {
-        IOpenFolderDialog GetOpenFileDialog();
+        IOpenFolderDialog GetOpenFolderDialog();
+        IOpenFileDialog GetOpenFileDialog();
     }
 }

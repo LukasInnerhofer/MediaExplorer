@@ -33,6 +33,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand AddMediaFromHttpCommand =>
             _addMediaFromHttpCommand ?? (_addMediaFromHttpCommand = new MvxAsyncCommand(AddMediaFromHttpAsync));
 
+        private IMvxCommand _addMediaFromFileSystemCommand;
+        public IMvxCommand AddMediaFromFileSystemCommand =>
+            _addMediaFromFileSystemCommand ?? (_addMediaFromFileSystemCommand = new MvxAsyncCommand(AddMediaFromFileSystem));
+
         private IMvxCommand _closeCommand;
         public IMvxCommand CloseCommand =>
             _closeCommand ?? (_closeCommand = new MvxAsyncCommand(CloseAsync));
@@ -52,6 +56,17 @@ namespace MediaExplorer.Core.ViewModels
             await Album.AddMedia(
                 await Mvx.IoCProvider.Resolve<IMvxNavigationService>().
                 Navigate<HttpSourceDialogViewModel, object, List<KeyValuePair<string, MemoryStream>>>(null));
+        }
+
+        private async Task AddMediaFromFileSystem()
+        {
+            IOpenFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
+            dialog.RestoreDirectory = true;
+            dialog.Multiselect = true;
+            if(dialog.ShowDialog() == OpenFileDialogResult.Ok)
+            {
+                await Album.AddMedia(new List<string>(dialog.FileNames));
+            }
         }
 
         protected virtual async Task CloseAsync()

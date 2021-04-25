@@ -43,7 +43,14 @@ namespace MediaExplorer.Core.ViewModels
         {
             get
             {
-                return new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                if(Album.MediaCollections.Count > 0)
+                {
+                    return new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -77,6 +84,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
+            RaisePropertyChanged(nameof(Media));
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
         }
@@ -108,7 +116,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private bool NavigateNextMediaCanExecute()
         {
-            return ItMedia < Album.MediaCollections[ItCollections].Media.Count - 1;
+            return Album.MediaCollections.Count > 0 && ItMedia < Album.MediaCollections[ItCollections].Media.Count - 1;
         }
 
         private void NavigatePreviousMedia()

@@ -137,7 +137,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private async Task NewAlbumAsync()
         {
-            IOpenFolderDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
+            IOpenFolderDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFolderDialog();
             if((bool)dialog.ShowDialog())
             {
                 var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
