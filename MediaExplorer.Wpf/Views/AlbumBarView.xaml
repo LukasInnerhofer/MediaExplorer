@@ -8,6 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Menu>
+        <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
         <MenuItem Header="Add Media">
             <MenuItem Header="From Http Source" Command="{Binding AddMediaFromHttpCommand}"/>
         </MenuItem>

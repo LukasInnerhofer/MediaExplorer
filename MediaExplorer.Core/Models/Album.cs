@@ -77,6 +77,14 @@ namespace MediaExplorer.Core.Models
             }
         }
 
+        public async Task SaveAsync()
+        {
+            using(var fs = new FileStream(FilePath, FileMode.Create))
+            {
+                await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, this, Key);
+            }
+        }
+
         private async Task FindMediaAsync(string path)
         {
             Directory.CreateDirectory(path + Path.DirectorySeparatorChar + ".mediaexplorer" + Path.DirectorySeparatorChar + "media");

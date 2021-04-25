@@ -1,4 +1,5 @@
 ﻿using MediaExplorer.Core.Models;
+using MediaExplorer.Core.Services;
 using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
@@ -24,6 +25,10 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
+        private IMvxCommand _saveCommand;
+        public IMvxCommand SaveCommand =>
+            _saveCommand ?? (_saveCommand = new MvxAsyncCommand(SaveAlbumAsync));
+
         private IMvxCommand _addMediaFromHttpCommand;
         public IMvxCommand AddMediaFromHttpCommand =>
             _addMediaFromHttpCommand ?? (_addMediaFromHttpCommand = new MvxAsyncCommand(AddMediaFromHttpAsync));
@@ -31,6 +36,11 @@ namespace MediaExplorer.Core.ViewModels
         public CommonAlbumViewModel()
         {
 
+        }
+
+        private async Task SaveAlbumAsync()
+        {
+            await Album.SaveAsync();
         }
 
         private async Task AddMediaFromHttpAsync()
