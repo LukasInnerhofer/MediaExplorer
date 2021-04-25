@@ -10,14 +10,20 @@ namespace MediaExplorer.Core.Models
         public string Path { get; private set; }
         public MediaMetadata Metadata { get; private set; }
 
-        public Media(string path)
+        private Media(string path, MediaMetadata metadata)
         {
             Path = path;
+            Metadata = metadata;
         }
 
-        public Media() : this(string.Empty)
+        public Media(string path) : this(path, new MediaMetadata())
         {
-            Metadata = new MediaMetadata();
+
+        }
+
+        public Media() : this(string.Empty, new MediaMetadata())
+        {
+
         }
     }
 }

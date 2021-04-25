@@ -20,5 +20,8 @@
         <Image
             Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=ImageSupportsMediaConverter}}"
             Source="{Binding MediaUrl}"/>
+        <Expander HorizontalAlignment="Right">
+            <local:MediaMetadataView DataContext="{Binding Metadata}"/>
+        </Expander>
     </Grid>
 </mvxviews:MvxWpfView>

@@ -29,6 +29,7 @@ namespace MediaExplorer.Core.ViewModels
             private set
             {
                 SetProperty(ref _media, value);
+                RaisePropertyChanged(nameof(Metadata));
             }
         }
 
@@ -47,6 +48,8 @@ namespace MediaExplorer.Core.ViewModels
                 return $"http://127.0.0.1:12345/{_albumName}/{_mediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
             }
         }
+
+        public MediaMetadataViewModel Metadata { get { return new MediaMetadataViewModel(Media.Metadata); } }
 
         public MediaViewModel(Media media, MediaCollection mediaCollection, string albumName, byte[] key)
         {

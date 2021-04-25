@@ -5,6 +5,7 @@ using System.Text;
 
 namespace MediaExplorer.Core.Models
 {
+    [Serializable]
     public class MediaCharacter
     {
         public string Name { get; private set; }
