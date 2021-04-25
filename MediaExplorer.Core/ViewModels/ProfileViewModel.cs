@@ -33,6 +33,8 @@ namespace MediaExplorer.Core.ViewModels
                         ViewModels.Add(new VirtualAlbumFileViewModel(child as VirtualAlbumFile));
                     }
                 }
+
+                NavigateParentCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -69,6 +71,10 @@ namespace MediaExplorer.Core.ViewModels
         private IMvxCommand _openCommand;
         public IMvxCommand OpenCommand =>
             _openCommand ?? (_openCommand = new MvxCommand(Open));
+
+        private IMvxCommand _navigateParentCommand;
+        public IMvxCommand NavigateParentCommand =>
+            _navigateParentCommand ?? (_navigateParentCommand = new MvxCommand(NavigateParent, NavigateParentCanExecute));
 
         public ProfileViewModel()
         {
@@ -146,6 +152,16 @@ namespace MediaExplorer.Core.ViewModels
                     RootFolder = (SelectedViewModel as VirtualFolderViewModel).Folder;
                 }
             }
+        }
+
+        private void NavigateParent()
+        {
+            RootFolder = RootFolder.Parent;
+        }
+
+        private bool NavigateParentCanExecute()
+        {
+            return RootFolder.Parent != null;
         }
     }
 }
