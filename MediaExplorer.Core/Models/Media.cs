@@ -8,15 +8,16 @@ namespace MediaExplorer.Core.Models
     public class Media
     {
         public string Path { get; private set; }
-
-        public Media()
-        {
-            Path = string.Empty;
-        }
+        public MediaMetadata Metadata { get; private set; }
 
         public Media(string path)
         {
             Path = path;
+        }
+
+        public Media() : this(string.Empty)
+        {
+            Metadata = new MediaMetadata();
         }
     }
 }

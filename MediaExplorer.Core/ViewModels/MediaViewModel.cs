@@ -13,45 +13,22 @@ using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class MediaCollectionViewModel : MvxViewModel
+    public class MediaViewModel : MvxViewModel
     {
-        private int _it;
-        private int It
-        {
-            get { return _it; }
-            set
-            {
-                _it = value;
-                RaisePropertyChanged(nameof(MediaCollection));
-            }
-        }
-
         private string _albumName;
         private byte[] _key;
-
         private MediaCollection _mediaCollection;
-        private MediaCollection MediaCollection
-        {
-            get { return _mediaCollection; }
-            set
-            {
-                _mediaCollection = value;
-                RaisePropertyChanged(nameof(Media));
-            }
-        }
 
-        private Media Media
+        private Media _media;
+        public Media Media
         {
             get
             {
-                if (MediaCollection.Media.Count <= It)
-                {
-                    return null;
-                }
-                else
-                {
-                    return MediaCollection.Media[It];
-                }
+                return _media;
+            }
+            private set
+            {
+                SetProperty(ref _media, value);
             }
         }
 
@@ -65,17 +42,18 @@ namespace MediaExplorer.Core.ViewModels
                 }
 
                 Mvx.IoCProvider.Resolve<IHttpListenerService>().Register(
-                    $"{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/",
+                    $"{_albumName}/{_mediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/",
                     HttpMediaRequest);
-                return $"http://127.0.0.1:12345/{_albumName}/{MediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
+                return $"http://127.0.0.1:12345/{_albumName}/{_mediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
             }
         }
 
-        public MediaCollectionViewModel(MediaCollection mediaCollection, string albumName, byte[] key)
+        public MediaViewModel(Media media, MediaCollection mediaCollection, string albumName, byte[] key)
         {
-            MediaCollection = mediaCollection;
+            _mediaCollection = mediaCollection;
             _albumName = albumName;
             _key = key;
+            Media = media;
         }
 
         private void HttpMediaRequest(HttpListenerContext context)

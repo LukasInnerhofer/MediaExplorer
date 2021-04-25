@@ -66,7 +66,7 @@ namespace MediaExplorer.Core.ViewModels
                     Stream.Seek(0, SeekOrigin.Begin);
                     Done = true;
                 }
-                catch(ThreadAbortException _)
+                catch(ThreadAbortException)
                 {
 
                 }

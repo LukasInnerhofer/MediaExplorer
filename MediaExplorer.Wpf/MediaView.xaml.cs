@@ -21,10 +21,10 @@ namespace MediaExplorer.Wpf.Views
     /// <summary>
     /// Interaction logic for MediaCollectionView.xaml
     /// </summary>
-    [MvxViewFor(typeof(MediaCollectionViewModel))]
-    public partial class MediaCollectionView : MvxWpfView
+    [MvxViewFor(typeof(MediaViewModel))]
+    public partial class MediaView : MvxWpfView
     {
-        public MediaCollectionView() : base()
+        public MediaView() : base()
         {
             InitializeComponent();
         }

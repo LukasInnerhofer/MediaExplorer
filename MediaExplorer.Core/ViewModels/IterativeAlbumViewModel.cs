@@ -10,31 +10,37 @@ namespace MediaExplorer.Core.ViewModels
 {
     public class IterativeAlbumViewModel : CommonAlbumViewModel
     {
-        private int _it;
-        private int It
+        private int _itCollections;
+        private int ItCollections
         {
-            get { return _it; }
+            get { return _itCollections; }
             set
             {
-                _it = value;
-                RaisePropertyChanged(nameof(MediaCollection));
+                _itCollections = value;
+                ItMedia = 0;
                 NavigateNextCommand.RaiseCanExecuteChanged();
                 NavigatePreviousCommand.RaiseCanExecuteChanged();
             }
         }
 
-        public MediaCollectionViewModel MediaCollection
+        private int _itMedia;
+        private int ItMedia
+        {
+            get { return _itMedia; }
+            set
+            {
+                _itMedia = value;
+                RaisePropertyChanged(nameof(Media));
+                NavigateNextMediaCommand.RaiseCanExecuteChanged();
+                NavigatePreviousMediaCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public MediaViewModel Media
         {
             get
             {
-                if(Album.MediaCollections.Count <= It)
-                {
-                    return null;
-                }
-                else
-                {
-                    return new MediaCollectionViewModel(Album.MediaCollections[It], Album.Name, Album.Key);
-                }
+                return new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
             }
         }
 
@@ -46,9 +52,18 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand NavigatePreviousCommand =>
             _navigatePreviousCommand ?? (_navigatePreviousCommand = new MvxCommand(NavigatePrevious, NavigatePreviousCanExecute));
 
+        private IMvxCommand _navigateNextMediaCommand;
+        public IMvxCommand NavigateNextMediaCommand =>
+            _navigateNextMediaCommand ?? (_navigateNextMediaCommand = new MvxCommand(NavigateNextMedia, NavigateNextMediaCanExecute));
+
+        private IMvxCommand _navigatePreviousMediaCommand;
+        public IMvxCommand NavigatePreviousMediaCommand =>
+            _navigatePreviousMediaCommand ?? (_navigatePreviousMediaCommand = new MvxCommand(NavigatePreviousMedia, NavigatePreviousMediaCanExecute));
+
         public IterativeAlbumViewModel()
         {
-            It = 0;
+            ItCollections = 0;
+            ItMedia = 0;
         }
 
         public override void Prepare(Album parameter)
@@ -65,22 +80,42 @@ namespace MediaExplorer.Core.ViewModels
 
         private void NavigateNext()
         {
-            ++It;
+            ++ItCollections;
         }
 
         private bool NavigateNextCanExecute()
         {
-            return It < Album.MediaCollections.Count - 1;
+            return ItCollections < Album.MediaCollections.Count - 1;
         }
 
         private void NavigatePrevious()
         {
-            --It;
+            --ItCollections;
         }
 
         private bool NavigatePreviousCanExecute()
         {
-            return It > 0;
+            return ItCollections > 0;
+        }
+
+        private void NavigateNextMedia()
+        {
+            ++ItMedia;
+        }
+
+        private bool NavigateNextMediaCanExecute()
+        {
+            return ItMedia < Album.MediaCollections[ItCollections].Media.Count - 1;
+        }
+
+        private void NavigatePreviousMedia()
+        {
+            --ItMedia;
+        }
+
+        private bool NavigatePreviousMediaCanExecute()
+        {
+            return ItMedia > 0;
         }
     }
 }
