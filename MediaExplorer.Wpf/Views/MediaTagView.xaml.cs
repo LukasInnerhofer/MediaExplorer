@@ -21,10 +21,10 @@ namespace MediaExplorer.Wpf.Views
     /// <summary>
     /// Interaction logic for TagView.xaml
     /// </summary>
-    [MvxViewFor(typeof(TagViewModel))]
-    public partial class TagView : MvxWpfView
+    [MvxViewFor(typeof(MediaTagViewModel))]
+    public partial class MediaTagView : MvxWpfView
     {
-        public TagView()
+        public MediaTagView()
         {
             InitializeComponent();
         }

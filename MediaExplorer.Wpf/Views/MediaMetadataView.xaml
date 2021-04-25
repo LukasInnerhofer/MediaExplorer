@@ -15,7 +15,19 @@
         <ListBox ItemsSource="{Binding Tags}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <local:TagView DataContext="{Binding .}"/>
+                    <local:MediaTagView DataContext="{Binding .}"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <WrapPanel>
+            <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Command="{Binding AddCharacterCommand}" Content="Add Character"/>
+        </WrapPanel>
+        <ListBox ItemsSource="{Binding Characters}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <local:MediaCharacterView DataContext="{Binding .}"/>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class TagViewModel : MvxViewModel
+    public class MediaTagViewModel : MvxViewModel
     {
         public string Text
         {
@@ -31,7 +31,7 @@ namespace MediaExplorer.Core.ViewModels
 
         public event EventHandler Deleted;
 
-        public TagViewModel(MediaTag tag, EventHandler deleted = null)
+        public MediaTagViewModel(MediaTag tag, EventHandler deleted = null)
         {
             Tag = tag;
             if(deleted != null)

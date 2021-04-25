@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 
 namespace MediaExplorer.Core.Models
@@ -10,13 +11,31 @@ namespace MediaExplorer.Core.Models
     {
         public string Name { get; private set; }
 
-        private ObservableCollection<string> _tags;
-        public ReadOnlyObservableCollection<string> Tags { get { return new ReadOnlyObservableCollection<string>(_tags); } }
+        private ObservableCollection<MediaTag> _tags;
+        public ReadOnlyObservableCollection<MediaTag> Tags { get { return new ReadOnlyObservableCollection<MediaTag>(_tags); } }
 
-        public MediaCharacter()
+        public MediaCharacter(string name)
         {
-            Name = string.Empty;
-            _tags = new ObservableCollection<string>();
+            Name = name;
+            _tags = new ObservableCollection<MediaTag>();
+        }
+
+        public MediaCharacter() : this(string.Empty)
+        {
+            
+        }
+
+        public void AddTag(string text)
+        {
+            if (!_tags.Any(x => x.Text == text))
+            {
+                _tags.Add(new MediaTag(text));
+            }
+        }
+
+        public void RemoveTag(string text)
+        {
+            _tags.Remove(_tags.First(x => x.Text == text));
         }
     }
 }

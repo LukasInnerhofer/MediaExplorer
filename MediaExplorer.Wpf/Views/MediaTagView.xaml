@@ -1,4 +1,4 @@
-﻿<mvxviews:MvxWpfView x:Class="MediaExplorer.Wpf.Views.TagView"
+﻿<mvxviews:MvxWpfView x:Class="MediaExplorer.Wpf.Views.MediaTagView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

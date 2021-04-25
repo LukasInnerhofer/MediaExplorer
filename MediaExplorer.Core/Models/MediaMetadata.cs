@@ -33,5 +33,18 @@ namespace MediaExplorer.Core.Models
         {
             _tags.Remove(_tags.First(x => x.Text == text));
         }
+
+        public void AddCharacter(string name)
+        {
+            if(!_characters.Any(x => x.Name == name))
+            {
+                _characters.Add(new MediaCharacter(name));
+            }
+        }
+
+        public void RemoveCharacter(string name)
+        {
+            _characters.Remove(_characters.First(x => x.Name == name));
+        }
     }
 }
