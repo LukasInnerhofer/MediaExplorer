@@ -5,6 +5,9 @@ using System.Text;
 using MediaExplorer.Core.Models;
 using MvvmCross.Commands;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
+using MvvmCross;
+using MvvmCross.Navigation;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -116,6 +119,11 @@ namespace MediaExplorer.Core.ViewModels
         private bool NavigatePreviousMediaCanExecute()
         {
             return ItMedia > 0;
+        }
+
+        protected override async Task CloseAsync()
+        {
+            await Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this);
         }
     }
 }

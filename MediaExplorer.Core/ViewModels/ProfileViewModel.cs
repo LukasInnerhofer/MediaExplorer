@@ -87,6 +87,14 @@ namespace MediaExplorer.Core.ViewModels
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, _profile, _profile.KeyHash);
             }
+
+            foreach(var vm in ViewModels)
+            {
+                if(vm is VirtualAlbumFileViewModel)
+                {
+                    await (vm as VirtualAlbumFileViewModel).AlbumFile.Album.SaveAsync();
+                }
+            }
         }
 
         private void NewFolder()

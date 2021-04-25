@@ -33,6 +33,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand AddMediaFromHttpCommand =>
             _addMediaFromHttpCommand ?? (_addMediaFromHttpCommand = new MvxAsyncCommand(AddMediaFromHttpAsync));
 
+        private IMvxCommand _closeCommand;
+        public IMvxCommand CloseCommand =>
+            _closeCommand ?? (_closeCommand = new MvxAsyncCommand(CloseAsync));
+
         public CommonAlbumViewModel()
         {
 
@@ -48,6 +52,11 @@ namespace MediaExplorer.Core.ViewModels
             await Album.AddMedia(
                 await Mvx.IoCProvider.Resolve<IMvxNavigationService>().
                 Navigate<HttpSourceDialogViewModel, object, List<KeyValuePair<string, MemoryStream>>>(null));
+        }
+
+        protected virtual async Task CloseAsync()
+        {
+
         }
     }
 }

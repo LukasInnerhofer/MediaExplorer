@@ -16,10 +16,10 @@ namespace MediaExplorer.Core.ViewModels
     public class VirtualAlbumFileViewModel : VirtualFileSystemObjectViewModel
     {
         private VirtualAlbumFile _albumFile;
-        private VirtualAlbumFile AlbumFile
+        public  VirtualAlbumFile AlbumFile
         {
             get { return _albumFile; }
-            set 
+            private set 
             {
                 _albumFile = value;
                 Name = _albumFile.Name;
