@@ -7,29 +7,31 @@
              xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <StackPanel>
-        <WrapPanel>
-            <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
-        </WrapPanel>
-        <ListBox ItemsSource="{Binding Tags}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <local:MediaTagView DataContext="{Binding .}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+    <ScrollViewer>
+        <StackPanel>
+            <WrapPanel>
+                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
+            </WrapPanel>
+            <ListBox ItemsSource="{Binding Tags}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <local:MediaTagView DataContext="{Binding .}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
-        <WrapPanel>
-            <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Command="{Binding AddCharacterCommand}" Content="Add Character"/>
-        </WrapPanel>
-        <ListBox ItemsSource="{Binding Characters}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <local:MediaCharacterView DataContext="{Binding .}"/>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </StackPanel>
+            <WrapPanel>
+                <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Command="{Binding AddCharacterCommand}" Content="Add Character"/>
+            </WrapPanel>
+            <ListBox ItemsSource="{Binding Characters}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <local:MediaCharacterView DataContext="{Binding .}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </ScrollViewer>
 </mvxviews:MvxWpfView>

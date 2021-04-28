@@ -15,8 +15,11 @@
     </mvxviews:MvxWpfView.Resources>
     <Grid>
         <MediaElement 
+            Name="MediaElement"
             Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=MediaElementSupportsMediaConverter}}"
-            Source="{Binding MediaUrl}"/>
+            Source="{Binding MediaUrl}"
+            UnloadedBehavior="Manual"
+            MediaEnded="MediaElement_MediaEnded"/>
         <Image
             Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=ImageSupportsMediaConverter}}"
             Source="{Binding MediaUrl}"/>

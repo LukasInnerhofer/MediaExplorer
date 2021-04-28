@@ -9,7 +9,7 @@ namespace MediaExplorer.Wpf.Views
     /// <summary>
     /// Interaction logic for ProfileView.xaml
     /// </summary>
-    [MvxViewFor(typeof(Core.ViewModels.ProfileViewModel))]
+    [MvxViewFor(typeof(ProfileViewModel))]
     public partial class ProfileView : MvxWpfView
     {
         public ProfileView()
