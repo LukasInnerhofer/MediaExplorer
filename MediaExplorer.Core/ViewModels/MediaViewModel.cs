@@ -66,7 +66,12 @@ namespace MediaExplorer.Core.ViewModels
             {
                 Mvx.IoCProvider.Resolve<ICryptographyService>().DecryptAsync(fileStream, responseStream, _key).Wait();
             }
-            responseStream.Close();
+            //try
+            {
+                responseStream.Close();
+            }
+           // catch(Exception)
+           // { }
         }
     }
 }

@@ -34,5 +34,25 @@ namespace MediaExplorer.Wpf.Views
             MediaElement.Position = new TimeSpan(0, 0, 0);
             MediaElement.Play();
         }
+
+        private void ButtonStop_Click(object sender, RoutedEventArgs e)
+        {
+            MediaElement.Stop();
+        }
+
+        private void ButtonPause_Click(object sender, RoutedEventArgs e)
+        {
+            MediaElement.Pause();
+        }
+
+        private void ButtonPlay_Click(object sender, RoutedEventArgs e)
+        {
+            MediaElement.Play();
+        }
+
+        private void MediaElement_Loaded(object sender, RoutedEventArgs e)
+        {
+            MediaElement.Play();
+        }
     }
 }

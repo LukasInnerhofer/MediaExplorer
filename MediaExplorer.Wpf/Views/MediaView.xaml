@@ -14,12 +14,27 @@
         <wpfconverters:MediaElementSupportsMediaConverter x:Key="MediaElementSupportsMediaConverter"/>
     </mvxviews:MvxWpfView.Resources>
     <Grid>
-        <MediaElement 
-            Name="MediaElement"
-            Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=MediaElementSupportsMediaConverter}}"
-            Source="{Binding MediaUrl}"
-            UnloadedBehavior="Manual"
-            MediaEnded="MediaElement_MediaEnded"/>
+        <Grid Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=MediaElementSupportsMediaConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            
+            <MediaElement 
+                Grid.Row="0"
+                Name="MediaElement"
+                Source="{Binding MediaUrl}"
+                UnloadedBehavior="Manual"
+                LoadedBehavior="Manual"
+                MediaEnded="MediaElement_MediaEnded"
+                Loaded="MediaElement_Loaded"/>
+            <WrapPanel Grid.Row="1" HorizontalAlignment="Center">
+                <Button Name="ButtonStop" Content="Stop" Click="ButtonStop_Click"/>
+                <Button Name="ButtonPause" Content="Pause" Click="ButtonPause_Click"/>
+                <Button Name="ButtonPlay" Content="Play" Click="ButtonPlay_Click"/>
+            </WrapPanel>
+        </Grid>
+        
         <Image
             Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=ImageSupportsMediaConverter}}"
             Source="{Binding MediaUrl}"/>
