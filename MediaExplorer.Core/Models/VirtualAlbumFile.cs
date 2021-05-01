@@ -30,7 +30,31 @@ namespace MediaExplorer.Core.Models
         public override async Task InitializeNonSerializedMembers(object param)
         {
             _key = param as byte[];
-            using(var fs = new FileStream(_realPath, FileMode.Open))
+
+            while (!File.Exists(_realPath))
+            {
+                MessageBoxResult result = Mvx.IoCProvider.Resolve<IMessageBoxService>().Show(
+                    $"Album {Name} does not exist. Would you like to update its path?",
+                    "Album not found",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question,
+                    MessageBoxResult.Yes);
+                if(result == MessageBoxResult.Yes)
+                {
+                    IOpenFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
+                    dialog.RestoreDirectory = true;
+                    if(dialog.ShowDialog() == OpenFileDialogResult.Ok)
+                    {
+                        _realPath = dialog.FileName;
+                    }
+                }
+                else
+                {
+                    return;
+                }
+            }
+
+            using (var fs = new FileStream(_realPath, FileMode.Open))
             {
                 Album = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Album>(fs, _key);
                 Album.InitializeNonSerializedMembers(_key, _realPath);

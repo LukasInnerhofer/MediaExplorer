@@ -52,7 +52,16 @@ namespace MediaExplorer.Core.ViewModels
             using(var fs = new FileStream("profile", FileMode.Open))
             {
                 byte[] keyHash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key));
-                profile = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Models.Profile>(fs, keyHash);
+
+                try
+                {
+                    profile = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Models.Profile>(fs, keyHash);
+                }
+                catch(InvalidKeyException)
+                {
+                    Mvx.IoCProvider.Resolve<IMessageBoxService>().Show("Invalid key.", "Error Opening Profile", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
+                    return;
+                }
                 await profile.InitializeNonSerializedMembers(keyHash);
             }
             

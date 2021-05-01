@@ -25,5 +25,10 @@ namespace MediaExplorer.Core.Models
         {
 
         }
+
+        public void UpdatePath(string newPath)
+        {
+            Path = newPath;
+        }
     }
 }

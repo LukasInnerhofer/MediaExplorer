@@ -60,6 +60,18 @@ namespace MediaExplorer.Core.Models
         {
             _key = key;
             FilePath = filePath;
+            if(filePath.Replace(Path.DirectorySeparatorChar + "album", "") != _basePath)
+            {
+                string oldBasePath = _basePath;
+                _basePath = FilePath.Replace(Path.DirectorySeparatorChar + "album", "");
+                foreach (MediaCollection collection in _mediaCollections)
+                {
+                    foreach (Media media in collection.Media)
+                    {
+                        media.UpdatePath(media.Path.Replace(oldBasePath, _basePath));
+                    }
+                }
+            }
         }
 
         public async Task AddMedia(List<KeyValuePair<string, MemoryStream>> streams)

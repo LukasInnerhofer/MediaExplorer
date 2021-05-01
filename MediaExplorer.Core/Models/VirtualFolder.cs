@@ -25,6 +25,11 @@ namespace MediaExplorer.Core.Models
             return true;
         }
 
+        public void RemoveChild(VirtualFileSystemObject child)
+        {
+            _children.Remove(child);
+        }
+
         public override async Task InitializeNonSerializedMembers(object param)
         {
             foreach(VirtualFileSystemObject child in Children)

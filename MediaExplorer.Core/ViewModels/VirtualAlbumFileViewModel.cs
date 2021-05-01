@@ -43,7 +43,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private IMvxCommand _openCommand;
         public IMvxCommand OpenCommand =>
-            _openCommand ?? (_openCommand = new MvxCommand(Open));
+            _openCommand ?? (_openCommand = new MvxCommand(Open, OpenCanExecute));
 
         public VirtualAlbumFileViewModel(VirtualAlbumFile albumFile) : base()
         {
@@ -70,7 +70,7 @@ namespace MediaExplorer.Core.ViewModels
                     errorMessage = $"An album with the name \"{Name}\" already exists.";
                 }
                 Name = AlbumFile.Name;
-                Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowMessageBox(errorMessage);
+                Mvx.IoCProvider.Resolve<IMessageBoxService>().Show(errorMessage, "Error Renaming Album", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
             }
         }
 
@@ -82,10 +82,12 @@ namespace MediaExplorer.Core.ViewModels
 
         private void Open()
         {
-            if(IsNameReadOnly)
-            {
-                Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new IterativeAlbumViewModel(), _albumFile.Album);
-            }
+            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new IterativeAlbumViewModel(), _albumFile.Album);
+        }
+
+        private bool OpenCanExecute()
+        {
+            return IsNameReadOnly && AlbumFile.Album != null;
         }
     }
 }
