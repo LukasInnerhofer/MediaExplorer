@@ -21,10 +21,10 @@
         <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding NewUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Button Grid.Column="1" Grid.Row="0" Command="{Binding AddUrlCommand}" Content="Add Url"/>
 
-        <ListView Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding Urls}">
+        <ListView Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding HttpSources}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding .}"/>
+                    <local:HttpSourceView DataContext="{Binding .}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

@@ -110,14 +110,14 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand CancelCommand => 
             _cancelCommand ?? (_cancelCommand = new MvxCommand(Cancel));
 
-        public MvxObservableCollection<string> Urls { get; private set; }
+        public MvxObservableCollection<HttpSourceViewModel> HttpSources { get; private set; }
 
         public HttpSourceDialogViewModel()
         {
             _jobs = new List<Job>();
             NewUrl = string.Empty;
-            Urls = new MvxObservableCollection<string>();
-            Urls.CollectionChanged += OnUrlsChanged;
+            HttpSources = new MvxObservableCollection<HttpSourceViewModel>();
+            HttpSources.CollectionChanged += OnHttpSourcesChanged;
         }
 
         public override void Prepare(object parameter)
@@ -127,7 +127,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private void AddUrl()
         {
-            Urls.Add(NewUrl);
+            HttpSources.Add(new HttpSourceViewModel(NewUrl));
             NewUrl = string.Empty;
         }
 
@@ -140,7 +140,7 @@ namespace MediaExplorer.Core.ViewModels
         {
             Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(
                 this,
-                _jobs.Select(x => new KeyValuePair<string, MemoryStream>(x.Url.Split('.').Last().Replace("/", string.Empty), x.Stream)).ToList());
+                _jobs.Select(x => new KeyValuePair<string, MemoryStream>(HttpSources.Where(y => y.Url == x.Url).Single().FileExtension, x.Stream)).ToList());
         }
 
         private bool OkCanExecute()
@@ -167,22 +167,22 @@ namespace MediaExplorer.Core.ViewModels
             Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this, new List<KeyValuePair<string, MemoryStream>>());
         }
 
-        private void OnUrlsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void OnHttpSourcesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             if(e.NewItems != null)
             {
-                foreach(string url in e.NewItems)
+                foreach(HttpSourceViewModel httpSource in e.NewItems)
                 {
-                    var job = new Job(url);
+                    var job = new Job(httpSource.Url);
                     job.DoneChanged += delegate (object _, EventArgs __) { OkCommand.RaiseCanExecuteChanged(); };
                     _jobs.Add(job);
                 }
             }
             if(e.OldItems != null)
             {
-                foreach (string url in e.OldItems)
+                foreach (HttpSourceViewModel httpSource in e.OldItems)
                 {
-                    _jobs.RemoveAt(_jobs.FindIndex(x => x.Url == url));
+                    _jobs.RemoveAt(_jobs.FindIndex(x => x.Url == httpSource.Url));
                 }
             }
         }
