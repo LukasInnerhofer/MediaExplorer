@@ -12,7 +12,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <TextBox Grid.Column="0" Text="{Binding Url}"/>
+        <TextBox IsReadOnly="True" Grid.Column="0" Text="{Binding Url}" Margin="0,0,2,0"/>
         <WrapPanel Grid.Column="1">
             <TextBlock Text="File Extension:"/>
             <TextBox Width="40" Text="{Binding FileExtension, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
