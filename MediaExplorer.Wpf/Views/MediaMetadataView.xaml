@@ -10,7 +10,11 @@
     <ScrollViewer>
         <StackPanel>
             <WrapPanel>
-                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
                 <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
             </WrapPanel>
             <ListBox ItemsSource="{Binding Tags}">
@@ -22,7 +26,11 @@
             </ListBox>
 
             <WrapPanel>
-                <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding AddCharacterCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
                 <Button Command="{Binding AddCharacterCommand}" Content="Add Character"/>
             </WrapPanel>
             <ListBox ItemsSource="{Binding Characters}">

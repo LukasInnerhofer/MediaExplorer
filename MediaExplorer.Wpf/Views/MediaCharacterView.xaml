@@ -16,7 +16,11 @@
         </GroupBox.Header>
         <StackPanel>
             <WrapPanel>
-                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
                 <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
             </WrapPanel>
             <ListBox ItemsSource="{Binding Tags}">
