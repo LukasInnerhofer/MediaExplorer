@@ -8,7 +8,11 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Menu>
-        <MenuItem Header="&lt;-" Command="{Binding CloseCommand}"/>
+        <MenuItem Command="{Binding CloseCommand}">
+            <MenuItem.Header>
+                <ContentControl ContentTemplate="{StaticResource Backwards}"/>
+            </MenuItem.Header>
+        </MenuItem>
         <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
         <MenuItem Header="Add Media">
             <MenuItem Header="From Http Source" Command="{Binding AddMediaFromHttpCommand}"/>
