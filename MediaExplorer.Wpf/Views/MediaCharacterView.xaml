@@ -10,11 +10,11 @@
     <GroupBox>
         <GroupBox.Header>
             <WrapPanel>
-                <Button Command="{Binding DeleteCommand}" Content="x"/>
+                <Button Command="{Binding DeleteCommand}" ContentTemplate="{StaticResource Close}" Background="Transparent" BorderBrush="Transparent"/>
                 <TextBlock Text="{Binding Name}"/>
             </WrapPanel>
         </GroupBox.Header>
-        <StackPanel>
+        <StackPanel Margin="2,2,2,2">
             <WrapPanel>
                 <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <TextBox.InputBindings>

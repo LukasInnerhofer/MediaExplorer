@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <WrapPanel>
-        <Button Command="{Binding DeleteCommand}" Content="x"/>
+        <Button Command="{Binding DeleteCommand}" ContentTemplate="{StaticResource Close}" Background="Transparent" BorderBrush="Transparent"/>
         <TextBlock Text="{Binding Text}"/>
     </WrapPanel>
 </mvxviews:MvxWpfView>
