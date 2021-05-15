@@ -14,7 +14,12 @@
         <wpfconverters:MediaElementSupportsMediaConverter x:Key="MediaElementSupportsMediaConverter"/>
     </mvxviews:MvxWpfView.Resources>
     <Grid>
-        <Grid Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=MediaElementSupportsMediaConverter}}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid Grid.Column="0" Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=MediaElementSupportsMediaConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -29,17 +34,18 @@
                 MediaEnded="MediaElement_MediaEnded"
                 Loaded="MediaElement_Loaded"/>
             <WrapPanel Grid.Row="1" HorizontalAlignment="Center">
-                <Button Name="ButtonStop" Content="Stop" Click="ButtonStop_Click"/>
-                <Button Name="ButtonPause" Content="Pause" Click="ButtonPause_Click"/>
-                <Button Name="ButtonPlay" Content="Play" Click="ButtonPlay_Click"/>
+                <Button Name="ButtonStop" ContentTemplate="{StaticResource Stop}" Background="Transparent" BorderBrush="Transparent" Click="ButtonStop_Click"/>
+                <Button Name="ButtonPause" ContentTemplate="{StaticResource Pause}" Background="Transparent" BorderBrush="Transparent" Click="ButtonPause_Click"/>
+                <Button Name="ButtonPlay" ContentTemplate="{StaticResource PlayVideo}" Background="Transparent" BorderBrush="Transparent" Click="ButtonPlay_Click"/>
             </WrapPanel>
         </Grid>
         
         <Image
+            Grid.Column="0"
             Visibility="{Binding MediaUrl, Converter={StaticResource ResourceKey=ImageSupportsMediaConverter}}"
             Source="{Binding MediaUrl}"/>
-        <Expander HorizontalAlignment="Right">
-            <local:MediaMetadataView DataContext="{Binding Metadata}"/>
+        <Expander Grid.Column="1">
+            <local:MediaMetadataView DataContext="{Binding Metadata}" Margin="5,0,0,0"/>
         </Expander>
     </Grid>
 </mvxviews:MvxWpfView>

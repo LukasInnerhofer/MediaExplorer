@@ -10,14 +10,14 @@
     <ScrollViewer>
         <StackPanel>
             <WrapPanel>
-                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="0,0,2,0">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
                     </TextBox.InputBindings>
                 </TextBox>
                 <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
             </WrapPanel>
-            <ListBox ItemsSource="{Binding Tags}">
+            <ListBox ItemsSource="{Binding Tags}" BorderBrush="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <local:MediaTagView DataContext="{Binding .}"/>
@@ -25,15 +25,15 @@
                 </ListBox.ItemTemplate>
             </ListBox>
 
-            <WrapPanel>
-                <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <WrapPanel Margin="0,10,0,0">
+                <TextBox Text="{Binding NewCharacterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="0,0,2,0">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Return" Command="{Binding AddCharacterCommand}"/>
                     </TextBox.InputBindings>
                 </TextBox>
                 <Button Command="{Binding AddCharacterCommand}" Content="Add Character"/>
             </WrapPanel>
-            <ListBox ItemsSource="{Binding Characters}">
+            <ListBox ItemsSource="{Binding Characters}" BorderBrush="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <local:MediaCharacterView DataContext="{Binding .}"/>

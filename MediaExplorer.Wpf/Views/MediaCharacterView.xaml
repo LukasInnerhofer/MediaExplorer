@@ -16,14 +16,14 @@
         </GroupBox.Header>
         <StackPanel Margin="2,2,2,2">
             <WrapPanel>
-                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="0,0,2,0">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
                     </TextBox.InputBindings>
                 </TextBox>
                 <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
             </WrapPanel>
-            <ListBox ItemsSource="{Binding Tags}">
+            <ListBox ItemsSource="{Binding Tags}" BorderBrush="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <local:MediaTagView DataContext="{Binding .}"/>
