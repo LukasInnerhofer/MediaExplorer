@@ -40,7 +40,8 @@ namespace MediaExplorer.Core.ViewModels
 
         private async Task Create()
         {
-            using(var fs = new FileStream("profile", FileMode.Create))
+            await Mvx.IoCProvider.Resolve<IFileSystemService>().CreateFileAsync($"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}profile");
+            using (var fs = await Mvx.IoCProvider.Resolve<IFileSystemService>().OpenFileAsync("profile"))//new FileStream("profile", FileMode.Create))
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(
                     fs,

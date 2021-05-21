@@ -16,6 +16,9 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using MvvmCross.Platforms.Uap.Core;
 using MvvmCross.Platforms.Uap.Views;
+using MvvmCross;
+using MediaExplorer.Core.Services;
+using MediaExplorer.Uwp.Services;
 
 namespace MediaExplorer.Uwp
 {

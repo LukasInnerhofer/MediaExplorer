@@ -15,6 +15,9 @@ using Windows.UI.Xaml.Navigation;
 using MvvmCross.Platforms.Uap.Views;
 using MvvmCross.ViewModels;
 using MediaExplorer.Core.ViewModels;
+using MvvmCross;
+using MediaExplorer.Core.Services;
+using MediaExplorer.Uwp.Services;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -29,6 +32,7 @@ namespace MediaExplorer.Uwp.Views
         public OpenProfileView()
         {
             this.InitializeComponent();
+            Mvx.IoCProvider.RegisterSingleton<IFileSystemService>(new FileSystemService());
         }
     }
 }

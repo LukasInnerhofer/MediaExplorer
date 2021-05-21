@@ -1,4 +1,7 @@
-﻿using System;
+﻿using MediaExplorer.Core.Services;
+using MediaExplorer.Uwp.Services;
+using MvvmCross;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
