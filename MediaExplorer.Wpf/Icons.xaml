@@ -79,7 +79,7 @@
         </Style.Triggers>
     </Style>
     <DataTemplate x:Key="Close">
-        <Viewbox Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Fill">
+        <Viewbox Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
             <Rectangle Width="16" Height="16">
                 <Rectangle.Fill>
                     <DrawingBrush>
@@ -147,6 +147,46 @@
                                     <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
                                     <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M13,13L3,13 3,3 13,3z" />
                                     <GeometryDrawing Brush="#FF424242" Geometry="F1M12,12L4,12 4,4 12,4z" />
+                                </DrawingGroup.Children>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Viewbox>
+    </DataTemplate>
+    <DataTemplate x:Key="StartPoint">
+        <Viewbox Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+            <Rectangle Width="16" Height="16">
+                <Rectangle.Fill>
+                    <DrawingBrush>
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup.Children>
+                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M14,2.1313L6,7.4643 6,3.0003 3,3.0003 3,13.0003 6,13.0003 6,8.5353 14,13.8683z" />
+                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M13,12L7,8 13,4z" />
+                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M4,12L5.001,12 5.001,4 4,4z" />
+                                </DrawingGroup.Children>
+                            </DrawingGroup>
+                        </DrawingBrush.Drawing>
+                    </DrawingBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Viewbox>
+    </DataTemplate>
+    <DataTemplate x:Key="EndPoint">
+        <Viewbox Width="16" Height="16" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" Stretch="Uniform">
+            <Rectangle Width="16" Height="16">
+                <Rectangle.Fill>
+                    <DrawingBrush>
+                        <DrawingBrush.Drawing>
+                            <DrawingGroup>
+                                <DrawingGroup.Children>
+                                    <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                    <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M3,13.8682L11,8.5352 11,13.0002 14,13.0002 14,3.0002 11,3.0002 11,7.4652 3,2.1322z" />
+                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M4,4L10,8 4,12z" />
+                                    <GeometryDrawing Brush="#FF414141" Geometry="F1M12,12L13,12 13,4 12,4z" />
                                 </DrawingGroup.Children>
                             </DrawingGroup>
                         </DrawingBrush.Drawing>

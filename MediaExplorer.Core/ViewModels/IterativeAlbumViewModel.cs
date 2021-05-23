@@ -23,6 +23,8 @@ namespace MediaExplorer.Core.ViewModels
                 ItMedia = 0;
                 NavigateNextCommand.RaiseCanExecuteChanged();
                 NavigatePreviousCommand.RaiseCanExecuteChanged();
+                NavigateBeginCommand.RaiseCanExecuteChanged();
+                NavigateEndCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -73,6 +75,14 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand NavigatePreviousMediaCommand =>
             _navigatePreviousMediaCommand ?? (_navigatePreviousMediaCommand = new MvxCommand(NavigatePreviousMedia, NavigatePreviousMediaCanExecute));
 
+        private IMvxCommand _navigateBeginCommand;
+        public IMvxCommand NavigateBeginCommand =>
+            _navigateBeginCommand ?? (_navigateBeginCommand = new MvxCommand(NavigateBegin, NavigateBeginCanExecute));
+
+        private IMvxCommand _navigateEndCommand;
+        public IMvxCommand NavigateEndCommand =>
+            _navigateEndCommand ?? (_navigateEndCommand = new MvxCommand(NavigateEnd, NavigateEndCanExecute));
+
         public IterativeAlbumViewModel()
         {
             ItCollections = 0;
@@ -90,6 +100,8 @@ namespace MediaExplorer.Core.ViewModels
             RaisePropertyChanged(nameof(Media));
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
+            NavigateBeginCommand.RaiseCanExecuteChanged();
+            NavigateEndCommand.RaiseCanExecuteChanged();
         }
 
         private void NavigateNext()
@@ -130,6 +142,28 @@ namespace MediaExplorer.Core.ViewModels
         private bool NavigatePreviousMediaCanExecute()
         {
             return ItMedia > 0;
+        }
+
+        private void NavigateBegin()
+        {
+            ItMedia = 0;
+            ItCollections = 0;
+        }
+
+        private bool NavigateBeginCanExecute()
+        {
+            return ItCollections > 0;
+        }
+
+        private void NavigateEnd()
+        {
+            ItMedia = 0;
+            ItCollections = Album.MediaCollections.Count - 1;
+        }
+
+        private bool NavigateEndCanExecute()
+        {
+            return ItCollections < Album.MediaCollections.Count - 1 && Album.MediaCollections.Count > 0;
         }
 
         protected override async Task CloseAsync()

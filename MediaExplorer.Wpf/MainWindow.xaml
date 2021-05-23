@@ -8,7 +8,4 @@
     xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     mc:Ignorable="d"
     Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <TextBlock Text="Epstein didn't kill himself."/>
-    </Grid>
 </mvxviews:MvxWindow>
