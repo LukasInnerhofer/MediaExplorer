@@ -39,13 +39,16 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
+        private MediaViewModel _media;
         public MediaViewModel Media
         {
             get
             {
                 if(Album.MediaCollections.Count > 0)
                 {
-                    return new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                    _media?.Close();
+                    _media = new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                    return _media;
                 }
                 else
                 {
