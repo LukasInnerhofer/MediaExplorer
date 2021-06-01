@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using MvvmCross;
 using MvvmCross.Navigation;
+using System.Linq;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -36,6 +37,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 _itMedia = value;
                 RaisePropertyChanged(nameof(Media));
+                RaisePropertyChanged(nameof(MediaMetadata));
                 NavigateNextMediaCommand.RaiseCanExecuteChanged();
                 NavigatePreviousMediaCommand.RaiseCanExecuteChanged();
             }
@@ -58,6 +60,8 @@ namespace MediaExplorer.Core.ViewModels
                 }
             }
         }
+
+        public MediaMetadataViewModel MediaMetadata => Media.Metadata;
 
         private IMvxCommand _navigateNextCommand;
         public IMvxCommand NavigateNextCommand =>
@@ -98,6 +102,7 @@ namespace MediaExplorer.Core.ViewModels
         private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(Media));
+            RaisePropertyChanged(nameof(MediaMetadata));
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
             NavigateBeginCommand.RaiseCanExecuteChanged();
@@ -106,7 +111,13 @@ namespace MediaExplorer.Core.ViewModels
 
         private void NavigateNext()
         {
-            ++ItCollections;
+            int newIt = ItCollections;
+            do
+            {
+                ++newIt;
+                if (newIt >= Album.MediaCollections.Count) return;
+            } while (!TagFilter.Cond.Evaluate(x => Album.MediaCollections[newIt].Media.First().Metadata.Tags.Any(y => ((MediaTag)x).Text == string.Empty || y.Text == ((MediaTag)x).Text)));
+            ItCollections = newIt;
         }
 
         private bool NavigateNextCanExecute()
