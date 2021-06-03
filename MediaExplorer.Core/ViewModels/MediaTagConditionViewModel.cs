@@ -1,4 +1,5 @@
 ﻿using MediaExplorer.Core.Models;
+using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ namespace MediaExplorer.Core.ViewModels
             { 
                 SetProperty(ref _selectedOperation, value);
                 Cond.Op = Condition.OperationNameMap[_selectedOperation];
+                AddConditionCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -51,10 +53,13 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
+        private IMvxCommand _addConditionCommand;
+        public IMvxCommand AddConditionCommand =>
+            _addConditionCommand ?? (_addConditionCommand = new MvxCommand(AddCondition, AddConditionCanExecute));
+
         public MediaTagConditionViewModel(Condition condition)
         {
             Cond = condition;
-            Cond.Object = new MediaTag("");
             ((INotifyCollectionChanged)Cond.Conditions).CollectionChanged += ConditionsChanged;
             Conditions = new MvxObservableCollection<MediaTagConditionViewModel>();
             foreach(Condition c in Cond.Conditions)
@@ -79,6 +84,17 @@ namespace MediaExplorer.Core.ViewModels
                     Conditions.RemoveAt(Conditions.IndexOf(Conditions.Where(x => x.Cond == condition).Single()));
                 }
             }
+        }
+
+        private void AddCondition()
+        {
+            Cond.Conditions.Add(new Condition(new MediaTag(string.Empty)));
+        }
+
+        private bool AddConditionCanExecute()
+        {
+            Condition.Operation operation = Condition.OperationNameMap[SelectedOperation];
+            return  operation != Condition.Operation.None && operation != Condition.Operation.Not;
         }
     }
 }

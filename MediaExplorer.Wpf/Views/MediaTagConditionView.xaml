@@ -10,6 +10,7 @@
     <StackPanel>
         <ComboBox ItemsSource="{Binding Operations}" SelectedItem="{Binding SelectedOperation, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" SelectedValue="And"/>
         <TextBox Text="{Binding TagText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+        <Button Command="{Binding AddConditionCommand}" ContentTemplate="{StaticResource Add}" Background="Transparent" BorderBrush="Transparent"/>
         <ListBox ItemsSource="{Binding Conditions}">
             <ListBox.ItemTemplate>
                 <DataTemplate>

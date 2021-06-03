@@ -32,16 +32,21 @@ namespace MediaExplorer.Core.Models
             { Operation.Or, (i1, i2) => { return i1 || i2; } }
         };
 
-        public ReadOnlyObservableCollection<Condition> Conditions { get; set; }
+        public ObservableCollection<Condition> Conditions { get; set; }
         public object Object { get; set; }
 
         public Operation Op { get; set; }
 
-        public Condition(ICollection<Condition> conditions, object o, Operation operation)
+        private Condition(ICollection<Condition> conditions, object o, Operation operation)
         {
-            Conditions = new ReadOnlyObservableCollection<Condition>(new ObservableCollection<Condition>(conditions));
+            Conditions = new ObservableCollection<Condition>(new ObservableCollection<Condition>(conditions));
             Object = o;
             Op = operation;
+        }
+
+        public Condition(object o) : this(new List<Condition>(), o, Operation.And)
+        {
+
         }
 
         public bool Evaluate(Func<object, bool> expression)

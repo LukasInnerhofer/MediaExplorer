@@ -21,7 +21,7 @@
                         <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
                     </TextBox.InputBindings>
                 </TextBox>
-                <Button Command="{Binding AddTagCommand}" Content="Add Tag"/>
+                <Button Command="{Binding AddTagCommand}" ContentTemplate="{StaticResource Add}" Background="Transparent" BorderBrush="Transparent"/>
             </WrapPanel>
             <ListBox ItemsSource="{Binding Tags}" BorderBrush="Transparent">
                 <ListBox.ItemTemplate>

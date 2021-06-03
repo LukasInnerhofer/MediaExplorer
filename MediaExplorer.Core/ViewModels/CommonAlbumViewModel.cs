@@ -46,7 +46,7 @@ namespace MediaExplorer.Core.ViewModels
         public CommonAlbumViewModel()
         {
             TagFilter = new MediaTagConditionViewModel(
-                new Condition(new List<Condition>() { new Condition(new List<Condition>(), null, Condition.Operation.And) }, null, Condition.Operation.And));
+                new Condition(new MediaTag(string.Empty)));
         }
 
         private async Task SaveAlbumAsync()

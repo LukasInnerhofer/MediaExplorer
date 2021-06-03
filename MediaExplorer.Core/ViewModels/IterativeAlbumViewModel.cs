@@ -127,7 +127,13 @@ namespace MediaExplorer.Core.ViewModels
 
         private void NavigatePrevious()
         {
-            --ItCollections;
+            int newIt = ItCollections;
+            do
+            {
+                --newIt;
+                if (newIt == 0) return;
+            } while (!TagFilter.Cond.Evaluate(x => Album.MediaCollections[newIt].Media.First().Metadata.Tags.Any(y => ((MediaTag)x).Text == string.Empty || y.Text == ((MediaTag)x).Text)));
+            ItCollections = newIt;
         }
 
         private bool NavigatePreviousCanExecute()
