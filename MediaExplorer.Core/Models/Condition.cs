@@ -57,12 +57,22 @@ namespace MediaExplorer.Core.Models
                 foreach(Condition condition in Conditions)
                 {
                     result = Operations[Op](result, condition.Evaluate(expression));
+                    // TODO: Handle invalid operation
                 }
                 return result;
             }
             else
             {
-                return (bool)expression?.Invoke(Object);
+                if(Op == Operation.None)
+                {
+                    return (bool)expression?.Invoke(Object);
+                }
+                if (Op == Operation.Not)
+                {
+                    return !(bool)expression?.Invoke(Object);
+                }
+                // TODO: throw InvalidOperationException
+                return false;
             }
         }
     }
