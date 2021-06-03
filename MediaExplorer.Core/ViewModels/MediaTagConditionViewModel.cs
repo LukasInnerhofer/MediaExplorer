@@ -57,14 +57,21 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand AddConditionCommand =>
             _addConditionCommand ?? (_addConditionCommand = new MvxCommand(AddCondition, AddConditionCanExecute));
 
-        public MediaTagConditionViewModel(Condition condition)
+        private IMvxCommand _deleteCommand;
+        public IMvxCommand DeleteCommand =>
+            _deleteCommand ?? (_deleteCommand = new MvxCommand(Delete, DeleteCanExecute));
+
+        public event EventHandler Deleted;
+
+        public MediaTagConditionViewModel(Condition condition, EventHandler deleted = null)
         {
             Cond = condition;
             ((INotifyCollectionChanged)Cond.Conditions).CollectionChanged += ConditionsChanged;
             Conditions = new MvxObservableCollection<MediaTagConditionViewModel>();
-            foreach(Condition c in Cond.Conditions)
+
+            if (deleted != null)
             {
-                Conditions.Add(new MediaTagConditionViewModel(c));
+                Deleted += deleted;
             }
         }
 
@@ -74,7 +81,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 foreach(Condition condition in e.NewItems)
                 {
-                    Conditions.Add(new MediaTagConditionViewModel(condition));
+                    Conditions.Add(new MediaTagConditionViewModel(condition, ConditionDeleted));
                 }
             }
             if(e.OldItems != null)
@@ -95,6 +102,21 @@ namespace MediaExplorer.Core.ViewModels
         {
             Condition.Operation operation = Condition.OperationNameMap[SelectedOperation];
             return  operation != Condition.Operation.None && operation != Condition.Operation.Not;
+        }
+
+        private void Delete()
+        {
+            Deleted?.Invoke(this, new EventArgs());
+        }
+
+        private bool DeleteCanExecute()
+        {
+            return Deleted != null;
+        }
+
+        private void ConditionDeleted(object sender, EventArgs e)
+        {
+            Conditions.Remove(sender as MediaTagConditionViewModel);
         }
     }
 }

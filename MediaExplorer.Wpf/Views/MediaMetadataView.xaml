@@ -16,7 +16,7 @@
                             <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
                         </TextBox.InputBindings>
                     </TextBox>
-                    <Button Command="{Binding AddTagCommand}" ContentTemplate="{StaticResource Add}" Background="Transparent" BorderBrush="Transparent"/>
+                    <Button Command="{Binding AddTagCommand}" Style="{StaticResource AddStyle}" Background="Transparent" BorderBrush="Transparent"/>
                 </WrapPanel>
                 <ListBox ItemsSource="{Binding Tags}" BorderBrush="Transparent">
                     <ListBox.ItemTemplate>
@@ -36,7 +36,7 @@
                             <KeyBinding Key="Return" Command="{Binding AddCharacterCommand}"/>
                         </TextBox.InputBindings>
                     </TextBox>
-                    <Button Command="{Binding AddCharacterCommand}" ContentTemplate="{StaticResource Add}" Background="Transparent" BorderBrush="Transparent"/>
+                    <Button Command="{Binding AddCharacterCommand}" Style="{StaticResource AddStyle}" Background="Transparent" BorderBrush="Transparent"/>
                 </WrapPanel>
                 <ListBox ItemsSource="{Binding Characters}" BorderBrush="Transparent">
                     <ListBox.ItemTemplate>
