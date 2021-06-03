@@ -116,6 +116,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private void ConditionDeleted(object sender, EventArgs e)
         {
+            Cond.Conditions.Remove((sender as MediaTagConditionViewModel).Cond);
             Conditions.Remove(sender as MediaTagConditionViewModel);
         }
     }
