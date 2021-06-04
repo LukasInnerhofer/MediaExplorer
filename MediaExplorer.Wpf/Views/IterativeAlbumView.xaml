@@ -39,8 +39,16 @@
                 <ScrollViewer>
                     <StackPanel>
                         <local:MediaMetadataView DataContext="{Binding MediaMetadata}" Margin="5,0,0,0"/>
-                        <local:MediaTagConditionView DataContext="{Binding TagFilter}"/>
-                        <local:MediaCharacterConditionView DataContext="{Binding CharacterFilter}"/>
+                        <GroupBox Header="Filters">
+                            <StackPanel>
+                                <GroupBox Header="Tags">
+                                    <local:MediaTagConditionView DataContext="{Binding TagFilter}"/>
+                                </GroupBox>
+                                <GroupBox Header="Characters">
+                                    <local:MediaCharacterConditionView DataContext="{Binding CharacterFilter}"/>
+                                </GroupBox>
+                            </StackPanel>
+                        </GroupBox>
                     </StackPanel>
                 </ScrollViewer>
             </Expander>
