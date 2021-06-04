@@ -118,7 +118,27 @@ namespace MediaExplorer.Core.ViewModels
 
         private bool FilterCharacter(object character)
         {
-            return Album.MediaCollections[_newIt].Media.First().Metadata.Characters.Any(x => x.Name == ((MediaCharacter)character).Name) || ((MediaCharacter)character).Name == string.Empty;
+            if(((MediaCharacter)character).Name == string.Empty)
+            {
+                return true;
+            }
+            
+            foreach (MediaCharacter c in Album.MediaCollections[_newIt].Media.First().Metadata.Characters.Where(x => x.Name == ((MediaCharacter)character).Name || ((MediaCharacter)character).Name == "#"))
+            {
+                bool valid = true;
+                foreach (MediaTag tag in ((MediaCharacter)character).Tags)
+                {
+                    if(!c.Tags.Any(x => x.Text == tag.Text))
+                    {
+                        valid = false;
+                    }
+                }
+                if(valid)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void NavigateNext()
