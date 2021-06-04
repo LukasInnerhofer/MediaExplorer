@@ -56,9 +56,9 @@ namespace MediaExplorer.Core.ViewModels
                         _thread.Start();
                     }
 
-                    // TODO: Get an actual placeholder
-                    return string.Empty;
+                    return Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + Path.DirectorySeparatorChar + "placeholder.bmp";
                 }
+                
 
                 string url = $"{_albumName}/{_mediaCollection.Name}/{Media.Path.Split(Path.DirectorySeparatorChar).Last()}/";
                 if(_observer == null)
