@@ -95,7 +95,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private void AddCondition()
         {
-            Cond.Conditions.Add(new Condition(new MediaTag(string.Empty)));
+            Cond.Conditions.Add(new Condition(() => new MediaTag(string.Empty)));
         }
 
         private bool AddConditionCanExecute()

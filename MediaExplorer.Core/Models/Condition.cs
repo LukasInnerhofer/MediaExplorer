@@ -35,16 +35,41 @@ namespace MediaExplorer.Core.Models
         public ObservableCollection<Condition> Conditions { get; set; }
         public object Object { get; set; }
 
-        public Operation Op { get; set; }
+        private Operation _op;
+        public Operation Op
+        { 
+            get { return _op; } 
+            set
+            {
+                _op = value;
+                switch(_op)
+                {
+                    case Operation.And:
+                    case Operation.Or:
+                        Object = null;
+                        break;
+                    case Operation.Not:
+                    case Operation.None:
+                        if(Object == null)
+                        {
+                            Object = _createObject.Invoke();
+                        }
+                        break;
+                }
+            }
+        }
 
-        private Condition(ICollection<Condition> conditions, object o, Operation operation)
+        private Func<object> _createObject;
+
+        private Condition(ICollection<Condition> conditions, object o, Operation operation, Func<object> createObject)
         {
             Conditions = new ObservableCollection<Condition>(new ObservableCollection<Condition>(conditions));
             Object = o;
             Op = operation;
+            _createObject = createObject;
         }
 
-        public Condition(object o) : this(new List<Condition>(), o, Operation.And)
+        public Condition(Func<object> createObject) : this(new List<Condition>(), null, Operation.And, createObject)
         {
 
         }
