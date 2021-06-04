@@ -14,6 +14,10 @@ namespace MediaExplorer.Wpf.Converters
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if(value == null)
+            {
+                return Visibility.Collapsed;
+            }
             Core.Models.Condition.Operation operation = Core.Models.Condition.OperationNameMap[(string)value];
             switch(operation)
             {
