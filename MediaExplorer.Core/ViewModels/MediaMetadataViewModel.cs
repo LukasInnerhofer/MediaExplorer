@@ -104,11 +104,6 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        private void CharacterDeleted(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            _metadata.RemoveCharacter((sender as MediaCharacterViewModel).Name);
-        }
-
         private void TagDeleted(object sender, EventArgs e)
         {
             _metadata.RemoveTag((sender as MediaTagViewModel).Text);
@@ -116,7 +111,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private void CharacterDeleted(object sender, EventArgs e)
         {
-            _metadata.RemoveCharacter((sender as MediaCharacterViewModel).Name);
+            _metadata.RemoveCharacter((sender as MediaCharacterViewModel).Character);
         }
 
         private void AddTag()
