@@ -36,15 +36,12 @@ namespace MediaExplorer.Core.Models
 
         public void AddCharacter(string name)
         {
-            if(!_characters.Any(x => x.Name == name))
-            {
-                _characters.Add(new MediaCharacter(name));
-            }
+            _characters.Add(new MediaCharacter(name));
         }
 
-        public void RemoveCharacter(string name)
+        public void RemoveCharacter(MediaCharacter character)
         {
-            _characters.Remove(_characters.First(x => x.Name == name));
+            _characters.Remove(character);
         }
     }
 }
