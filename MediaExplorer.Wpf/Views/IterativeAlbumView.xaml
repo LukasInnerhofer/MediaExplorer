@@ -40,6 +40,7 @@
                     <StackPanel>
                         <local:MediaMetadataView DataContext="{Binding MediaMetadata}" Margin="5,0,0,0"/>
                         <local:MediaTagConditionView DataContext="{Binding TagFilter}"/>
+                        <local:MediaCharacterConditionView DataContext="{Binding CharacterFilter}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Expander>

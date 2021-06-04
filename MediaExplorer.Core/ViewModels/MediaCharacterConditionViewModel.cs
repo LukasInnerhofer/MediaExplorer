@@ -10,12 +10,12 @@ using System.Text;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class MediaTagConditionViewModel : MvxViewModel
+    public class MediaCharacterConditionViewModel : MvxViewModel
     {
         public Condition Cond { get; private set; }
 
-        private MvxObservableCollection<MediaTagConditionViewModel> _conditions;
-        public MvxObservableCollection<MediaTagConditionViewModel> Conditions
+        private MvxObservableCollection<MediaCharacterConditionViewModel> _conditions;
+        public MvxObservableCollection<MediaCharacterConditionViewModel> Conditions
         {
             get { return _conditions; }
             set { SetProperty(ref _conditions, value); }
@@ -27,27 +27,19 @@ namespace MediaExplorer.Core.ViewModels
         public string SelectedOperation
         {
             get { return _selectedOperation; }
-            set 
-            { 
+            set
+            {
                 SetProperty(ref _selectedOperation, value);
                 Cond.Op = Condition.OperationNameMap[_selectedOperation];
                 AddConditionCommand.RaiseCanExecuteChanged();
             }
         }
 
-        private string _tagText;
-        public string TagText
-        {
-            get { return _tagText; }
-            set 
-            {
-                SetProperty(ref _tagText, value);
-
-                if(Cond.Object != null)
-                {
-                    ((MediaTag)Cond.Object).Text = _tagText;
-                }
-            }
+        private MediaCharacterViewModel _character;
+        public MediaCharacterViewModel Character 
+        { 
+            get { return _character; }
+            private set { SetProperty(ref _character, value); }
         }
 
         private IMvxCommand _addConditionCommand;
@@ -60,12 +52,26 @@ namespace MediaExplorer.Core.ViewModels
 
         public event EventHandler Deleted;
 
-        public MediaTagConditionViewModel(Condition condition, EventHandler deleted = null)
+        public MediaCharacterConditionViewModel(Condition condition, EventHandler deleted = null)
         {
             Cond = condition;
+            Cond.CreateObject = new Func<object>(() =>
+            {
+                var character = new MediaCharacter();
+                Character = new MediaCharacterViewModel(character);
+                return character;
+            });
+            if (Cond.Object != null)
+            {
+                Character = new MediaCharacterViewModel(Cond.Object as MediaCharacter, false);
+            }
+            else
+            {
+                Character = new MediaCharacterViewModel(new MediaCharacter(string.Empty));
+            }
             ((INotifyCollectionChanged)Cond.Conditions).CollectionChanged += ConditionsChanged;
-            Conditions = new MvxObservableCollection<MediaTagConditionViewModel>();
-
+            Conditions = new MvxObservableCollection<MediaCharacterConditionViewModel>();
+           
             if (deleted != null)
             {
                 Deleted += deleted;
@@ -74,16 +80,16 @@ namespace MediaExplorer.Core.ViewModels
 
         private void ConditionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if(e.NewItems != null)
+            if (e.NewItems != null)
             {
-                foreach(Condition condition in e.NewItems)
+                foreach (Condition condition in e.NewItems)
                 {
-                    Conditions.Add(new MediaTagConditionViewModel(condition, ConditionDeleted));
+                    Conditions.Add(new MediaCharacterConditionViewModel(condition, ConditionDeleted));
                 }
             }
-            if(e.OldItems != null)
+            if (e.OldItems != null)
             {
-                foreach(Condition condition in e.OldItems)
+                foreach (Condition condition in e.OldItems)
                 {
                     Conditions.RemoveAt(Conditions.IndexOf(Conditions.Where(x => x.Cond == condition).Single()));
                 }
@@ -92,13 +98,13 @@ namespace MediaExplorer.Core.ViewModels
 
         private void AddCondition()
         {
-            Cond.Conditions.Add(new Condition(() => new MediaTag(string.Empty)));
+            Cond.Conditions.Add(new Condition(() => new MediaCharacter(string.Empty)));
         }
 
         private bool AddConditionCanExecute()
         {
             Condition.Operation operation = Condition.OperationNameMap[SelectedOperation];
-            return  operation != Condition.Operation.None && operation != Condition.Operation.Not;
+            return operation != Condition.Operation.None && operation != Condition.Operation.Not;
         }
 
         private void Delete()
@@ -113,8 +119,8 @@ namespace MediaExplorer.Core.ViewModels
 
         private void ConditionDeleted(object sender, EventArgs e)
         {
-            Cond.Conditions.Remove((sender as MediaTagConditionViewModel).Cond);
-            Conditions.Remove(sender as MediaTagConditionViewModel);
+            Cond.Conditions.Remove((sender as MediaCharacterConditionViewModel).Cond);
+            Conditions.Remove(sender as MediaCharacterConditionViewModel);
         }
     }
 }

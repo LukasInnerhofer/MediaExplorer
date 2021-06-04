@@ -43,6 +43,8 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
+        private int _newIt;
+
         private MediaViewModel _media;
         public MediaViewModel Media
         {
@@ -109,15 +111,25 @@ namespace MediaExplorer.Core.ViewModels
             NavigateEndCommand.RaiseCanExecuteChanged();
         }
 
+        private bool FilterTag(object tag)
+        {
+            return Album.MediaCollections[_newIt].Media.First().Metadata.Tags.Any(x => x.Text == ((MediaTag)tag).Text) || ((MediaTag)tag).Text == string.Empty;
+        }
+
+        private bool FilterCharacter(object character)
+        {
+            return Album.MediaCollections[_newIt].Media.First().Metadata.Characters.Any(x => x.Name == ((MediaCharacter)character).Name) || ((MediaCharacter)character).Name == string.Empty;
+        }
+
         private void NavigateNext()
         {
-            int newIt = ItCollections;
+            _newIt = ItCollections;
             do
             {
-                ++newIt;
-                if (newIt >= Album.MediaCollections.Count) return;
-            } while (!TagFilter.Cond.Evaluate(x => Album.MediaCollections[newIt].Media.First().Metadata.Tags.Any(y => ((MediaTag)x).Text == string.Empty || y.Text == ((MediaTag)x).Text)));
-            ItCollections = newIt;
+                ++_newIt;
+                if (_newIt >= Album.MediaCollections.Count) return;
+            } while (!TagFilter.Cond.Evaluate(FilterTag) || !CharacterFilter.Cond.Evaluate(FilterCharacter));
+            ItCollections = _newIt;
         }
 
         private bool NavigateNextCanExecute()
@@ -127,13 +139,13 @@ namespace MediaExplorer.Core.ViewModels
 
         private void NavigatePrevious()
         {
-            int newIt = ItCollections;
+            _newIt = ItCollections;
             do
             {
-                --newIt;
-                if (newIt == 0) return;
-            } while (!TagFilter.Cond.Evaluate(x => Album.MediaCollections[newIt].Media.First().Metadata.Tags.Any(y => ((MediaTag)x).Text == string.Empty || y.Text == ((MediaTag)x).Text)));
-            ItCollections = newIt;
+                --_newIt;
+                if (_newIt == -1) return;
+            } while (!TagFilter.Cond.Evaluate(FilterTag) || !CharacterFilter.Cond.Evaluate(FilterCharacter));
+            ItCollections = _newIt;
         }
 
         private bool NavigatePreviousCanExecute()

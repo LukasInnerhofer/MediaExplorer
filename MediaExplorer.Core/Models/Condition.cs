@@ -52,24 +52,29 @@ namespace MediaExplorer.Core.Models
                     case Operation.None:
                         if(Object == null)
                         {
-                            Object = _createObject.Invoke();
+                            Object = CreateObject.Invoke();
                         }
                         break;
                 }
             }
         }
 
-        private Func<object> _createObject;
+        public Func<object> CreateObject { get; set; }
 
         private Condition(ICollection<Condition> conditions, object o, Operation operation, Func<object> createObject)
         {
             Conditions = new ObservableCollection<Condition>(new ObservableCollection<Condition>(conditions));
             Object = o;
             Op = operation;
-            _createObject = createObject;
+            CreateObject = createObject;
         }
 
         public Condition(Func<object> createObject) : this(new List<Condition>(), null, Operation.And, createObject)
+        {
+
+        }
+
+        public Condition() : this(new List<Condition>(), null, Operation.And, () => new object())
         {
 
         }
@@ -88,16 +93,16 @@ namespace MediaExplorer.Core.Models
             }
             else
             {
-                if(Op == Operation.None)
+                switch(Op)
                 {
-                    return (bool)expression?.Invoke(Object);
+                    case Operation.None:
+                        return (bool)expression?.Invoke(Object);
+                    case Operation.Not:
+                        return !(bool)expression?.Invoke(Object);
+                    default:
+                        // Non owning operation without child conditions.
+                        return true;
                 }
-                if (Op == Operation.Not)
-                {
-                    return !(bool)expression?.Invoke(Object);
-                }
-                // TODO: throw InvalidOperationException
-                return false;
             }
         }
     }

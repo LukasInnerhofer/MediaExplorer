@@ -26,6 +26,7 @@ namespace MediaExplorer.Core.ViewModels
         }
 
         public MediaTagConditionViewModel TagFilter { get; private set; }
+        public MediaCharacterConditionViewModel CharacterFilter { get; private set; }
 
         private IMvxCommand _saveCommand;
         public IMvxCommand SaveCommand =>
@@ -46,6 +47,7 @@ namespace MediaExplorer.Core.ViewModels
         public CommonAlbumViewModel()
         {
             TagFilter = new MediaTagConditionViewModel(new Condition(() => new MediaTag(string.Empty)));
+            CharacterFilter = new MediaCharacterConditionViewModel(new Condition(() => new MediaCharacter(string.Empty)));
         }
 
         private async Task SaveAlbumAsync()
