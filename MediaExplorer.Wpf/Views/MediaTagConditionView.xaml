@@ -5,8 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
              xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+             xmlns:converters="clr-namespace:MediaExplorer.Wpf.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <mvxviews:MvxWpfView.Resources>
+        <converters:ConditionObjectVisibilityConverter x:Key="ConditionObjectVisibilityConverter"/>
+    </mvxviews:MvxWpfView.Resources>
+    
     <StackPanel>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -20,7 +25,7 @@
             <Button Grid.Column="2" Command="{Binding DeleteCommand}" Style="{StaticResource CloseStyle}"/>
         </Grid>
 
-        <TextBox Text="{Binding TagText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
+        <TextBox Text="{Binding TagText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" Visibility="{Binding SelectedOperation, Converter={StaticResource ConditionObjectVisibilityConverter}}"/>
         <ListBox ItemsSource="{Binding Conditions}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
