@@ -25,18 +25,9 @@ namespace MediaExplorer.Wpf.Views
     [MvxViewFor(typeof(CommonAlbumViewModel))]
     public partial class AlbumBarView : MvxWpfView
     {
-        private IMvxCommand _addMediaFromHtmlCommand;
-        public IMvxCommand AddMediaFromHtmlCommand =>
-            _addMediaFromHtmlCommand ?? (_addMediaFromHtmlCommand = new MvxAsyncCommand(AddMediaFromHtmlAsync));
-
         public AlbumBarView() : base()
         {
             InitializeComponent();
-        }
-
-        public async Task AddMediaFromHtmlAsync()
-        {
-
         }
     }
 }

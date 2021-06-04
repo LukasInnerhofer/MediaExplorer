@@ -104,7 +104,7 @@ namespace MediaExplorer.Core.ViewModels
                 _stream.CopyTo(responseStream);
                 responseStream.Close();
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 // TODO: WPF sometimes makes a bunch of requests for one file. 
                 // Some of which cause an exception.

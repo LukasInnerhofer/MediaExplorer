@@ -44,7 +44,7 @@ namespace MediaExplorer.Core.Services
                     {
                        context = _httpListener.GetContext();
                     }
-                    catch(HttpListenerException _)
+                    catch(HttpListenerException)
                     {
                         break;
                     }
