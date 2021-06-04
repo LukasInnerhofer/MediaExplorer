@@ -36,8 +36,12 @@ namespace MediaExplorer.Core.ViewModels
             set
             {
                 _itMedia = value;
-                RaisePropertyChanged(nameof(Media));
-                RaisePropertyChanged(nameof(MediaMetadata));
+
+                if(Album.MediaCollections.Count > 0)
+                {
+                    Media = new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                }
+                
                 NavigateNextMediaCommand.RaiseCanExecuteChanged();
                 NavigatePreviousMediaCommand.RaiseCanExecuteChanged();
             }
@@ -52,8 +56,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 if(Album.MediaCollections.Count > 0)
                 {
-                    _media?.Close();
-                    _media = new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                    
                     return _media;
                 }
                 else
@@ -61,9 +64,25 @@ namespace MediaExplorer.Core.ViewModels
                     return null;
                 }
             }
+            private set
+            {
+                _media?.Close();
+                SetProperty(ref _media, value);
+                RaisePropertyChanged(nameof(MediaMetadata));
+            }
         }
 
-        public MediaMetadataViewModel MediaMetadata => Media.Metadata;
+        public MediaMetadataViewModel MediaMetadata
+        {
+            get
+            {
+                if(Media == null)
+                {
+                    return new MediaMetadataViewModel(new MediaMetadata());
+                }
+                return Media.Metadata;
+            }
+        }
 
         private IMvxCommand _navigateNextCommand;
         public IMvxCommand NavigateNextCommand =>
@@ -91,20 +110,20 @@ namespace MediaExplorer.Core.ViewModels
 
         public IterativeAlbumViewModel()
         {
-            ItCollections = 0;
-            ItMedia = 0;
+            
         }
 
         public override void Prepare(Album parameter)
         {
             Album = parameter;
             ((INotifyCollectionChanged)Album.MediaCollections).CollectionChanged += MediaCollectionsChanged;
+            ItCollections = 0;
+            ItMedia = 0;
         }
 
         private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            RaisePropertyChanged(nameof(Media));
-            RaisePropertyChanged(nameof(MediaMetadata));
+            Media = new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
             NavigateNextMediaCommand.RaiseCanExecuteChanged();
