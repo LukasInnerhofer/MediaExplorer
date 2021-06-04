@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using System.Threading.Tasks;
 using MvvmCross;
 using MvvmCross.Navigation;
+using System.Linq;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -36,10 +37,13 @@ namespace MediaExplorer.Core.ViewModels
             {
                 _itMedia = value;
                 RaisePropertyChanged(nameof(Media));
+                RaisePropertyChanged(nameof(MediaMetadata));
                 NavigateNextMediaCommand.RaiseCanExecuteChanged();
                 NavigatePreviousMediaCommand.RaiseCanExecuteChanged();
             }
         }
+
+        private int _newIt;
 
         private MediaViewModel _media;
         public MediaViewModel Media
@@ -58,6 +62,8 @@ namespace MediaExplorer.Core.ViewModels
                 }
             }
         }
+
+        public MediaMetadataViewModel MediaMetadata => Media.Metadata;
 
         private IMvxCommand _navigateNextCommand;
         public IMvxCommand NavigateNextCommand =>
@@ -98,15 +104,52 @@ namespace MediaExplorer.Core.ViewModels
         private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(Media));
+            RaisePropertyChanged(nameof(MediaMetadata));
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
             NavigateBeginCommand.RaiseCanExecuteChanged();
             NavigateEndCommand.RaiseCanExecuteChanged();
         }
 
+        private bool FilterTag(object tag)
+        {
+            return Album.MediaCollections[_newIt].Media.First().Metadata.Tags.Any(x => x.Text == ((MediaTag)tag).Text) || ((MediaTag)tag).Text == string.Empty;
+        }
+
+        private bool FilterCharacter(object character)
+        {
+            if(((MediaCharacter)character).Name == string.Empty)
+            {
+                return true;
+            }
+            
+            foreach (MediaCharacter c in Album.MediaCollections[_newIt].Media.First().Metadata.Characters.Where(x => x.Name == ((MediaCharacter)character).Name || ((MediaCharacter)character).Name == "#"))
+            {
+                bool valid = true;
+                foreach (MediaTag tag in ((MediaCharacter)character).Tags)
+                {
+                    if(!c.Tags.Any(x => x.Text == tag.Text))
+                    {
+                        valid = false;
+                    }
+                }
+                if(valid)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void NavigateNext()
         {
-            ++ItCollections;
+            _newIt = ItCollections;
+            do
+            {
+                ++_newIt;
+                if (_newIt >= Album.MediaCollections.Count) return;
+            } while (!TagFilter.Cond.Evaluate(FilterTag) || !CharacterFilter.Cond.Evaluate(FilterCharacter));
+            ItCollections = _newIt;
         }
 
         private bool NavigateNextCanExecute()
@@ -116,7 +159,13 @@ namespace MediaExplorer.Core.ViewModels
 
         private void NavigatePrevious()
         {
-            --ItCollections;
+            _newIt = ItCollections;
+            do
+            {
+                --_newIt;
+                if (_newIt == -1) return;
+            } while (!TagFilter.Cond.Evaluate(FilterTag) || !CharacterFilter.Cond.Evaluate(FilterCharacter));
+            ItCollections = _newIt;
         }
 
         private bool NavigatePreviousCanExecute()
