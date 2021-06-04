@@ -18,7 +18,7 @@
     <GroupBox>
         <GroupBox.Header>
             <WrapPanel>
-                <Button Command="{Binding DeleteCommand}" ContentTemplate="{StaticResource Close}" Background="Transparent" BorderBrush="Transparent" Margin="0,0,2,0"/>
+                <Button Command="{Binding DeleteCommand}" Style="{StaticResource CloseStyle}" Margin="0,0,2,0"/>
                 <TextBox 
                     Name="TextBox"
                     Background="Transparent"
@@ -37,7 +37,7 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </TextBox>
-                <Button Command="{Binding StartRenameCommand}" Style="{StaticResource EditStyle}" Background="Transparent" BorderBrush="Transparent"/>
+                <Button Command="{Binding StartRenameCommand}" Style="{StaticResource EditStyle}"/>
             </WrapPanel>
         </GroupBox.Header>
         <StackPanel Margin="2,2,2,2">
@@ -47,7 +47,7 @@
                         <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
                     </TextBox.InputBindings>
                 </TextBox>
-                <Button Command="{Binding AddTagCommand}" ContentTemplate="{StaticResource Add}" Background="Transparent" BorderBrush="Transparent"/>
+                <Button Command="{Binding AddTagCommand}" Style="{StaticResource AddStyle}"/>
             </WrapPanel>
             <ListBox ItemsSource="{Binding Tags}" BorderBrush="Transparent">
                 <ListBox.ItemTemplate>

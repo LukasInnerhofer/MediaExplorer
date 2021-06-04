@@ -16,8 +16,8 @@
             </Grid.ColumnDefinitions>
 
             <ComboBox Grid.Column="0" ItemsSource="{Binding Operations}" SelectedItem="{Binding SelectedOperation, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}" SelectedValue="And"/>
-            <Button Grid.Column="1" Command="{Binding AddConditionCommand}" Style="{StaticResource AddStyle}" Background="Transparent" BorderBrush="Transparent"/>
-            <Button Grid.Column="2" Command="{Binding DeleteCommand}" Style="{StaticResource CloseStyle}" Background="Transparent" BorderBrush="Transparent"/>
+            <Button Grid.Column="1" Command="{Binding AddConditionCommand}" Style="{StaticResource AddStyle}"/>
+            <Button Grid.Column="2" Command="{Binding DeleteCommand}" Style="{StaticResource CloseStyle}"/>
         </Grid>
 
         <TextBox Text="{Binding TagText, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"/>
