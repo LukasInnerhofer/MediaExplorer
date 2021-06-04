@@ -107,6 +107,8 @@ namespace MediaExplorer.Core.ViewModels
             RaisePropertyChanged(nameof(MediaMetadata));
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
+            NavigateNextMediaCommand.RaiseCanExecuteChanged();
+            NavigatePreviousMediaCommand.RaiseCanExecuteChanged();
             NavigateBeginCommand.RaiseCanExecuteChanged();
             NavigateEndCommand.RaiseCanExecuteChanged();
         }

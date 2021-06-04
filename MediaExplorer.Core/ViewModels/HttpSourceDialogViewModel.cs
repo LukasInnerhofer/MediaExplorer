@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class HttpSourceDialogViewModel : MvxViewModel<object, List<KeyValuePair<string, MemoryStream>>>
+    public class HttpSourceDialogViewModel : MvxViewModel<object, List<Tuple<string, MemoryStream>>>
     {
         private class Job : INotifyPropertyChanged
         {
@@ -133,14 +133,14 @@ namespace MediaExplorer.Core.ViewModels
 
         private bool AddUrlCanExecute()
         {
-            return NewUrl != string.Empty;
+            return NewUrl != string.Empty && !_jobs.Any(x => x.Url == NewUrl);
         }
 
         private void Ok()
         {
             Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(
                 this,
-                _jobs.Select(x => new KeyValuePair<string, MemoryStream>(HttpSources.Where(y => y.Url == x.Url).Single().FileExtension, x.Stream)).ToList());
+                _jobs.Select(x => new Tuple<string, MemoryStream>(HttpSources.Where(y => y.Url == x.Url).Single().FileExtension, x.Stream)).ToList());
         }
 
         private bool OkCanExecute()
@@ -164,7 +164,7 @@ namespace MediaExplorer.Core.ViewModels
                     job.Cancel();
                 }
             }
-            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this, new List<KeyValuePair<string, MemoryStream>>());
+            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this, new List<Tuple<string, MemoryStream>>());
         }
 
         private void OnHttpSourcesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

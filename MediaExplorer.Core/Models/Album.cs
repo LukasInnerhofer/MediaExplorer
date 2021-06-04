@@ -74,18 +74,63 @@ namespace MediaExplorer.Core.Models
             }
         }
 
-        public async Task AddMedia(List<KeyValuePair<string, MemoryStream>> streams)
+        public async Task AddMedia(List<Tuple<string, MemoryStream>> streams)
         {
             foreach(var source in streams)
             {
-                string hash = BitConverter.ToString(await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(source.Value)).Replace("-", "");
-                source.Value.Seek(0, SeekOrigin.Begin);
-                string fileName = _basePath + Path.DirectorySeparatorChar + "media" + Path.DirectorySeparatorChar + hash + "." + source.Key;
+                string hash = BitConverter.ToString(await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(source.Item2)).Replace("-", "");
+                source.Item2.Seek(0, SeekOrigin.Begin);
+                string fileName = _basePath + Path.DirectorySeparatorChar + "media" + Path.DirectorySeparatorChar + hash + "." + source.Item1;
                 using(var fs = new FileStream(fileName, FileMode.Create))
                 {
-                    await Mvx.IoCProvider.Resolve<ICryptographyService>().EncryptAsync(source.Value, fs, _key);
+                    await Mvx.IoCProvider.Resolve<ICryptographyService>().EncryptAsync(source.Item2, fs, _key);
                 }
                 _mediaCollections.Add(new MediaCollection(hash, new Media(fileName)));
+            }
+        }
+
+        public async Task AddMediaCollection(List<Tuple<string, MemoryStream>> streams)
+        {
+            var files = new List<string>();
+            byte[] fileHash;
+            string encryptedDirPath;
+            string encryptedFilePath;
+
+            string collectionName = string.Empty;
+            encryptedDirPath = _basePath + Path.DirectorySeparatorChar + "media" + Path.DirectorySeparatorChar + "temp";
+            Directory.CreateDirectory(encryptedDirPath);
+            using (var collectionHashStream = new MemoryStream())
+            {
+                foreach (Tuple<string, MemoryStream> stream in streams)
+                {
+                    encryptedFilePath = encryptedDirPath;
+
+                    fileHash = await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(stream.Item2);
+                    stream.Item2.Seek(0, SeekOrigin.Begin);
+                    collectionHashStream.Write(fileHash, 0, fileHash.Length);
+
+                    encryptedFilePath += Path.DirectorySeparatorChar +
+                        BitConverter.ToString(fileHash).Replace("-", "") + "." + stream.Item1;
+
+                    using (var dest = new FileStream(encryptedFilePath, FileMode.Create))
+                    {
+                        await Mvx.IoCProvider.Resolve<ICryptographyService>().EncryptAsync(stream.Item2, dest, _key);
+                    }
+
+                    files.Add(encryptedFilePath);
+                }
+
+                collectionName = BitConverter.ToString(await Mvx.IoCProvider.Resolve<ICryptographyService>().ComputeHashAsync(collectionHashStream)).Replace("-", "");
+                Directory.Move(encryptedDirPath, Path.GetDirectoryName(encryptedDirPath) + Path.DirectorySeparatorChar + collectionName);
+            }
+            if (files.Count > 0)
+            {
+                List<Media> media = new List<Media>();
+                foreach (string file in files)
+                {
+                    media.Add(new Media(file.Replace("temp", collectionName)));
+                }
+                _mediaCollections.Add(new MediaCollection(collectionName, media));
             }
         }
 
