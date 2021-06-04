@@ -123,7 +123,8 @@ namespace MediaExplorer.Core.ViewModels
                 return true;
             }
             
-            foreach (MediaCharacter c in Album.MediaCollections[_newIt].Media.First().Metadata.Characters.Where(x => x.Name == ((MediaCharacter)character).Name || ((MediaCharacter)character).Name == "#"))
+            foreach (MediaCharacter c in Album.MediaCollections[_newIt].Media.First().Metadata.Characters.Where(
+                x => x.Name == ((MediaCharacter)character).Name || ((MediaCharacter)character).Name == Constants.Filter.Wildcard))
             {
                 bool valid = true;
                 foreach (MediaTag tag in ((MediaCharacter)character).Tags)

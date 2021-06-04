@@ -57,7 +57,7 @@ namespace MediaExplorer.Core.ViewModels
             Cond = condition;
             Cond.CreateObject = new Func<object>(() =>
             {
-                var character = new MediaCharacter();
+                var character = new MediaCharacter(Constants.Filter.Wildcard);
                 Character = new MediaCharacterViewModel(character);
                 return character;
             });
