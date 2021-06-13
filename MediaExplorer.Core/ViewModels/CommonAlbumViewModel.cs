@@ -26,10 +26,6 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        public ReadOnlyObservableCollection<string> AllTags => Album.AllTags;
-        public ReadOnlyObservableCollection<string> AllCharacterTags => Album.AllCharacterTags;
-        public ReadOnlyObservableCollection<string> AllCharacterNames => Album.AllCharacterNames;
-
         public MediaTagConditionViewModel TagFilter { get; private set; }
         public MediaCharacterConditionViewModel CharacterFilter { get; private set; }
 
@@ -55,8 +51,9 @@ namespace MediaExplorer.Core.ViewModels
 
         public CommonAlbumViewModel()
         {
+            Album = new Album();
             TagFilter = new MediaTagConditionViewModel(new Condition(() => new MediaTag(string.Empty)));
-            CharacterFilter = new MediaCharacterConditionViewModel(new Condition(() => new MediaCharacter(string.Empty)));
+            CharacterFilter = new MediaCharacterConditionViewModel(new Condition(() => new MediaCharacter(string.Empty)), Album.AllCharacterTags);
         }
 
         private async Task SaveAlbumAsync()

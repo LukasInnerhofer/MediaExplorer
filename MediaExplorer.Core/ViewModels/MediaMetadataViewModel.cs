@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
+using System.Collections.ObjectModel;
 
 namespace MediaExplorer.Core.ViewModels
 {
@@ -46,7 +47,16 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand AddCharacterCommand =>
             _addCharacterCommand ?? (_addCharacterCommand = new MvxCommand(AddCharacter, AddCharacterCanExecute));
 
-        public MediaMetadataViewModel(MediaMetadata metadata)
+        public ReadOnlyObservableCollection<string> AllTags { get; private set; }
+        public ReadOnlyObservableCollection<string> AllCharacterNames { get; private set; }
+
+        private ReadOnlyObservableCollection<string> _allCharacterTags;
+
+        public MediaMetadataViewModel(
+            MediaMetadata metadata,
+            ReadOnlyObservableCollection<string> allTags,
+            ReadOnlyObservableCollection<string> allCharacterTags,
+            ReadOnlyObservableCollection<string> allCharacterNames)
         {
             _metadata = metadata;
 
@@ -61,11 +71,24 @@ namespace MediaExplorer.Core.ViewModels
             Characters = new MvxObservableCollection<MediaCharacterViewModel>();
             foreach(MediaCharacter character in _metadata.Characters)
             {
-                Characters.Add(new MediaCharacterViewModel(character, CharacterDeleted));
+                Characters.Add(new MediaCharacterViewModel(character, CharacterDeleted, allCharacterTags));
             }
+
+            AllTags = allTags;
+            _allCharacterTags = allCharacterTags;
+            AllCharacterNames = allCharacterNames;
 
             NewTag = string.Empty;
             NewCharacterName = string.Empty;
+        }
+
+        public MediaMetadataViewModel() : this(
+            new MediaMetadata(), 
+            new ReadOnlyObservableCollection<string>(new ObservableCollection<string>()),
+            new ReadOnlyObservableCollection<string>(new ObservableCollection<string>()),
+            new ReadOnlyObservableCollection<string>(new ObservableCollection<string>()))
+        {
+
         }
 
         private void CharactersChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -74,7 +97,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 foreach (MediaCharacter character in e.NewItems)
                 {
-                    Characters.Add(new MediaCharacterViewModel(character, CharacterDeleted));
+                    Characters.Add(new MediaCharacterViewModel(character, CharacterDeleted, _allCharacterTags));
                 }
             }
             if (e.OldItems != null)

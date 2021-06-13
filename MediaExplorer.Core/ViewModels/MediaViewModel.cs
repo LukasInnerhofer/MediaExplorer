@@ -4,6 +4,7 @@ using MvvmCross;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -71,13 +72,23 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        public MediaMetadataViewModel Metadata { get { return new MediaMetadataViewModel(Media.Metadata); } }
+        public MediaMetadataViewModel Metadata { get { return new MediaMetadataViewModel(Media.Metadata, _allTags, _allCharacterTags, _allCharacterNames); } }
+
+        private ReadOnlyObservableCollection<string> _allTags;
+        private ReadOnlyObservableCollection<string> _allCharacterTags;
+        private ReadOnlyObservableCollection<string> _allCharacterNames;
 
         private IHttpObserver _observer;
         private MemoryStream _stream;
         private Thread _thread;
 
-        public MediaViewModel(Media media, MediaCollection mediaCollection, string albumName, byte[] key)
+        public MediaViewModel(
+            Media media, 
+            MediaCollection mediaCollection, 
+            string albumName, byte[] key, 
+            ReadOnlyObservableCollection<string> allTags,
+            ReadOnlyObservableCollection<string> allCharacterTags,
+            ReadOnlyObservableCollection<string> allCharacterNames)
         {
             _mediaCollection = mediaCollection;
             _albumName = albumName;
@@ -85,6 +96,9 @@ namespace MediaExplorer.Core.ViewModels
             _stream = null;
             _observer = null;
             _done = false;
+            _allTags = allTags;
+            _allCharacterTags = allCharacterTags;
+            _allCharacterNames = allCharacterNames;
             Media = media;
         }
 

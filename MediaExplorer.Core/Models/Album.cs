@@ -41,7 +41,7 @@ namespace MediaExplorer.Core.Models
         private ObservableCollection<string> _allCharacterNames;
         public ReadOnlyObservableCollection<string> AllCharacterNames { get { return new ReadOnlyObservableCollection<string>(_allCharacterNames); } }
 
-        private Album()
+        public Album()
         {
             Name = string.Empty;
             FilePath = string.Empty;

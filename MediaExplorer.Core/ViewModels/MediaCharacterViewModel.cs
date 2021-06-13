@@ -5,6 +5,7 @@ using MvvmCross.Commands;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -77,7 +78,9 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        private MediaCharacterViewModel(MediaCharacter character, bool isNameReadOnly, EventHandler deleted)
+        public ReadOnlyObservableCollection<string> AllCharacterTags { get; private set; }
+
+        private MediaCharacterViewModel(MediaCharacter character, bool isNameReadOnly, EventHandler deleted, ReadOnlyObservableCollection<string> allCharacterTags)
         {
             Character = character;
 
@@ -96,19 +99,21 @@ namespace MediaExplorer.Core.ViewModels
             {
                 Deleted += deleted;
             }
+
+            AllCharacterTags = allCharacterTags;
         }
 
-        public MediaCharacterViewModel(MediaCharacter character) : this(character, true, null)
+        public MediaCharacterViewModel(MediaCharacter character, ReadOnlyObservableCollection<string> allCharacterTags) : this(character, true, null, allCharacterTags)
         {
 
         }
 
-        public MediaCharacterViewModel(MediaCharacter character, EventHandler deleted) : this(character, true, deleted)
+        public MediaCharacterViewModel(MediaCharacter character, EventHandler deleted, ReadOnlyObservableCollection<string> allCharacterTags) : this(character, true, deleted, allCharacterTags)
         {
             
         }
 
-        public MediaCharacterViewModel(MediaCharacter character, bool isNameReadOnly) : this(character, isNameReadOnly, null)
+        public MediaCharacterViewModel(MediaCharacter character, bool isNameReadOnly, ReadOnlyObservableCollection<string> allCharacterTags) : this(character, isNameReadOnly, null, allCharacterTags)
         {
 
         }
