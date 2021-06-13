@@ -27,6 +27,7 @@ namespace MediaExplorer.Core.ViewModels
         }
 
         public ReadOnlyObservableCollection<string> AllTags => Album.AllTags;
+        public ReadOnlyObservableCollection<string> AllCharacterTags => Album.AllCharacterTags;
 
         public MediaTagConditionViewModel TagFilter { get; private set; }
         public MediaCharacterConditionViewModel CharacterFilter { get; private set; }
