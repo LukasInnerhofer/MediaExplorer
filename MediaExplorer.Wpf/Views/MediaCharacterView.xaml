@@ -1,15 +1,17 @@
-﻿<mvxviews:MvxWpfView x:Class="MediaExplorer.Wpf.Views.MediaCharacterView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
-             xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
-             xmlns:converters="clr-namespace:MediaExplorer.Wpf.Converters"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             Loaded="MvxWpfView_Loaded">
+﻿<mvxviews:MvxWpfView 
+    x:Class="MediaExplorer.Wpf.Views.MediaCharacterView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
+    xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
+    xmlns:converters="clr-namespace:MediaExplorer.Wpf.Converters"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit"
+    mc:Ignorable="d" 
+    d:DesignHeight="450" d:DesignWidth="800"
+    Loaded="MvxWpfView_Loaded">
     <mvxviews:MvxWpfView.Resources>
         <converters:NativeInverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <converters:IsNameReadOnlyToBorderThicknessConverter x:Key="IsNameReadOnlyToBorderThicknessConverter"/>
@@ -42,11 +44,11 @@
         </GroupBox.Header>
         <StackPanel Margin="2,2,2,2">
             <WrapPanel>
-                <TextBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="0,0,2,0">
-                    <TextBox.InputBindings>
+                <toolkit:AutoCompleteBox Text="{Binding NewTag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="0,0,2,0" ItemsSource="{Binding AllCharacterTags}"> 
+                    <toolkit:AutoCompleteBox.InputBindings>
                         <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
-                    </TextBox.InputBindings>
-                </TextBox>
+                    </toolkit:AutoCompleteBox.InputBindings>
+                </toolkit:AutoCompleteBox>
                 <Button Command="{Binding AddTagCommand}" Style="{StaticResource AddStyle}"/>
             </WrapPanel>
             <ListBox ItemsSource="{Binding Tags}" BorderBrush="Transparent">

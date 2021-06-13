@@ -6,6 +6,7 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,8 +51,9 @@ namespace MediaExplorer.Core.ViewModels
 
         public CommonAlbumViewModel()
         {
+            Album = new Album();
             TagFilter = new MediaTagConditionViewModel(new Condition(() => new MediaTag(string.Empty)));
-            CharacterFilter = new MediaCharacterConditionViewModel(new Condition(() => new MediaCharacter(string.Empty)));
+            CharacterFilter = new MediaCharacterConditionViewModel(new Condition(() => new MediaCharacter(string.Empty)), Album.AllCharacterTags);
         }
 
         private async Task SaveAlbumAsync()

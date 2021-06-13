@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace MediaExplorer.Core.Models
@@ -10,13 +13,13 @@ namespace MediaExplorer.Core.Models
         private string _name;
         public string Name { get { return _name; } }
 
-        private List<Media> _media;
-        public IReadOnlyList<Media> Media { get { return _media; } }
+        private ObservableCollection<Media> _media;
+        public ReadOnlyObservableCollection<Media> Media { get { return new ReadOnlyObservableCollection<Media>(_media); } }
 
         public MediaCollection(string name, List<Media> media)
         {
             _name = name;
-            _media = media;
+            _media = new ObservableCollection<Media>(media);
         }
 
         public MediaCollection() : this(string.Empty, new List<Media>())

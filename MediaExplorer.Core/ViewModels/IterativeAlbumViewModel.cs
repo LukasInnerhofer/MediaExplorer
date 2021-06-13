@@ -39,7 +39,14 @@ namespace MediaExplorer.Core.ViewModels
 
                 if(Album.MediaCollections.Count > 0)
                 {
-                    Media = new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+                    Media = new MediaViewModel(
+                        Album.MediaCollections[ItCollections].Media[ItMedia], 
+                        Album.MediaCollections[ItCollections], 
+                        Album.Name,
+                        Album.Key,
+                        Album.AllTags,
+                        Album.AllCharacterTags,
+                        Album.AllCharacterNames);
                 }
                 
                 NavigateNextMediaCommand.RaiseCanExecuteChanged();
@@ -78,7 +85,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 if(Media == null)
                 {
-                    return new MediaMetadataViewModel(new MediaMetadata());
+                    return new MediaMetadataViewModel();
                 }
                 return Media.Metadata;
             }
@@ -123,7 +130,14 @@ namespace MediaExplorer.Core.ViewModels
 
         private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            Media = new MediaViewModel(Album.MediaCollections[ItCollections].Media[ItMedia], Album.MediaCollections[ItCollections], Album.Name, Album.Key);
+            Media = new MediaViewModel(
+                Album.MediaCollections[ItCollections].Media[ItMedia], 
+                Album.MediaCollections[ItCollections], 
+                Album.Name, 
+                Album.Key,
+                Album.AllTags,
+                Album.AllCharacterTags,
+                Album.AllCharacterNames);
             NavigateNextCommand.RaiseCanExecuteChanged();
             NavigatePreviousCommand.RaiseCanExecuteChanged();
             NavigateNextMediaCommand.RaiseCanExecuteChanged();

@@ -52,22 +52,24 @@ namespace MediaExplorer.Core.ViewModels
 
         public event EventHandler Deleted;
 
-        public MediaCharacterConditionViewModel(Condition condition, EventHandler deleted = null)
+        private ReadOnlyObservableCollection<string> _allCharacterTags;
+
+        public MediaCharacterConditionViewModel(Condition condition, ReadOnlyObservableCollection<string> allCharacterTags, EventHandler deleted = null)
         {
             Cond = condition;
             Cond.CreateObject = new Func<object>(() =>
             {
                 var character = new MediaCharacter(Constants.Filter.Wildcard);
-                Character = new MediaCharacterViewModel(character);
+                Character = new MediaCharacterViewModel(character, allCharacterTags);
                 return character;
             });
             if (Cond.Object != null)
             {
-                Character = new MediaCharacterViewModel(Cond.Object as MediaCharacter, false);
+                Character = new MediaCharacterViewModel(Cond.Object as MediaCharacter, false, allCharacterTags);
             }
             else
             {
-                Character = new MediaCharacterViewModel(new MediaCharacter(string.Empty));
+                Character = new MediaCharacterViewModel(new MediaCharacter(string.Empty), allCharacterTags);
             }
             ((INotifyCollectionChanged)Cond.Conditions).CollectionChanged += ConditionsChanged;
             Conditions = new MvxObservableCollection<MediaCharacterConditionViewModel>();
@@ -76,6 +78,8 @@ namespace MediaExplorer.Core.ViewModels
             {
                 Deleted += deleted;
             }
+
+            _allCharacterTags = allCharacterTags;
         }
 
         private void ConditionsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -84,7 +88,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 foreach (Condition condition in e.NewItems)
                 {
-                    Conditions.Add(new MediaCharacterConditionViewModel(condition, ConditionDeleted));
+                    Conditions.Add(new MediaCharacterConditionViewModel(condition, _allCharacterTags, ConditionDeleted));
                 }
             }
             if (e.OldItems != null)

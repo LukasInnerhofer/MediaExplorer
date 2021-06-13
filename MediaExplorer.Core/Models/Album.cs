@@ -29,11 +29,26 @@ namespace MediaExplorer.Core.Models
         private ObservableCollection<MediaCollection> _mediaCollections;
         public ReadOnlyObservableCollection<MediaCollection> MediaCollections { get { return new ReadOnlyObservableCollection<MediaCollection>(_mediaCollections); } }
 
-        private Album()
+        [field: NonSerialized]
+        private ObservableCollection<string> _allTags;
+        public ReadOnlyObservableCollection<string> AllTags { get { return new ReadOnlyObservableCollection<string>(_allTags); } }
+
+        [field: NonSerialized]
+        private ObservableCollection<string> _allCharacterTags;
+        public ReadOnlyObservableCollection<string> AllCharacterTags { get { return new ReadOnlyObservableCollection<string>(_allCharacterTags); } }
+
+        [field: NonSerialized]
+        private ObservableCollection<string> _allCharacterNames;
+        public ReadOnlyObservableCollection<string> AllCharacterNames { get { return new ReadOnlyObservableCollection<string>(_allCharacterNames); } }
+
+        public Album()
         {
             Name = string.Empty;
             FilePath = string.Empty;
             _mediaCollections = new ObservableCollection<MediaCollection>();
+            _allTags = new ObservableCollection<string>();
+            _allCharacterTags = new ObservableCollection<string>();
+            _allCharacterNames = new ObservableCollection<string>();
         }
 
         public static async Task<Album> FromBasePathAsync(string basePath, byte[] key)
@@ -52,6 +67,8 @@ namespace MediaExplorer.Core.Models
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, album, album._key);
             }
+
+            album.CollectMetadata();
 
             return album;
         }
@@ -72,6 +89,7 @@ namespace MediaExplorer.Core.Models
                     }
                 }
             }
+            CollectMetadata();
         }
 
         public async Task AddMedia(List<Tuple<string, MemoryStream>> streams)
@@ -157,6 +175,236 @@ namespace MediaExplorer.Core.Models
             using(var fs = new FileStream(FilePath, FileMode.Create))
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, this, Key);
+            }
+        }
+
+        private void CollectMetadata()
+        {
+            _allTags = new ObservableCollection<string>();
+            _allCharacterTags = new ObservableCollection<string>();
+            _allCharacterNames = new ObservableCollection<string>();
+            foreach (MediaCollection collection in _mediaCollections)
+            {
+                foreach(Media media in collection.Media)
+                {
+                    foreach(MediaTag tag in media.Metadata.Tags)
+                    {
+                        if(!_allTags.Contains(tag.Text))
+                        {
+                            _allTags.Add(tag.Text);
+                        }
+                    }
+                    foreach(MediaCharacter character in media.Metadata.Characters)
+                    {
+                        foreach(MediaTag tag in character.Tags)
+                        {
+                            if(!_allCharacterTags.Contains(tag.Text))
+                            {
+                                _allCharacterTags.Add(tag.Text);
+                            }
+                        }
+                        if(!_allCharacterNames.Contains(character.Name))
+                        {
+                            _allCharacterNames.Add(character.Name);
+                        }
+                        ((INotifyCollectionChanged)character.Tags).CollectionChanged += MediaCharacterTagsChanged;
+                    }
+                    ((INotifyCollectionChanged)media.Metadata.Characters).CollectionChanged += MediaCharactersChanged;
+                    ((INotifyCollectionChanged)media.Metadata.Tags).CollectionChanged += MediaTagsChanged;
+                }
+                ((INotifyCollectionChanged)collection.Media).CollectionChanged += MediaChanged;
+            }
+            ((INotifyCollectionChanged)_mediaCollections).CollectionChanged += MediaCollectionsChanged;
+        }
+
+        private void MediaCharactersChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (MediaCharacter character in e.NewItems)
+                {
+                    foreach(MediaTag tag in character.Tags)
+                    {
+                        if (!_allCharacterTags.Contains(tag.Text))
+                        {
+                            _allCharacterTags.Add(tag.Text);
+                        }
+                    }
+                    if(!_allCharacterNames.Contains(character.Name))
+                    {
+                        _allCharacterNames.Add(character.Name);
+                    }
+                    ((INotifyCollectionChanged)character.Tags).CollectionChanged += MediaCharacterTagsChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (MediaCharacter oldCharacter in e.OldItems)
+                {
+                    ReadOnlyObservableCollection<MediaTag> oldTags = oldCharacter.Tags;
+                    bool removeCharacterName = true;
+
+                    foreach (MediaCollection collection in _mediaCollections)
+                    {
+                        foreach (Media media in collection.Media)
+                        {
+                            foreach (MediaCharacter character in media.Metadata.Characters)
+                            {
+                                if (character.Name == oldCharacter.Name)
+                                {
+                                    removeCharacterName = false;
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (MediaTag oldTag in oldTags)
+                    {
+                        bool removeTag = true;
+                        foreach (MediaCollection collection in _mediaCollections)
+                        {
+                            foreach (Media media in collection.Media)
+                            {
+                                foreach(MediaCharacter character in media.Metadata.Characters)
+                                {
+                                    if(character.Name == oldCharacter.Name)
+                                    {
+                                        removeCharacterName = false;
+                                    }
+
+                                    foreach (MediaTag tag in character.Tags)
+                                    {
+                                        if (tag.Text == oldTag.Text)
+                                        {
+                                            removeTag = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (removeTag)
+                        {
+                            _allCharacterTags.Remove(oldTag.Text);
+                        }
+                    }
+                    if(removeCharacterName)
+                    {
+                        _allCharacterNames.Remove(oldCharacter.Name);
+                    }
+                }
+            }
+        }
+
+        private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (MediaCollection collection in e.NewItems)
+                {
+                    foreach(Media media in collection.Media)
+                    {
+                        ((INotifyCollectionChanged)media.Metadata.Tags).CollectionChanged += MediaTagsChanged;
+                        foreach(MediaCharacter character in media.Metadata.Characters)
+                        {
+                            ((INotifyCollectionChanged)character.Tags).CollectionChanged += MediaCharacterTagsChanged;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void MediaCharacterTagsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (MediaTag tag in e.NewItems)
+                {
+                    if(!_allCharacterTags.Contains(tag.Text))
+                    {
+                        _allCharacterTags.Add(tag.Text);
+                    }
+                }
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (MediaTag oldTag in e.OldItems)
+                {
+                    bool remove = true;
+                    foreach (MediaCollection collection in _mediaCollections)
+                    {
+                        foreach (Media media in collection.Media)
+                        {
+                            foreach (MediaCharacter character in media.Metadata.Characters)
+                            {
+                                foreach(MediaTag tag in character.Tags)
+                                {
+                                    if (tag.Text == oldTag.Text)
+                                    {
+                                        remove = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (remove)
+                    {
+                        _allCharacterTags.Remove(oldTag.Text);
+                    }
+                }
+            }
+        }
+
+        private void MediaChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Media media in e.NewItems)
+                {
+                    ((INotifyCollectionChanged)media.Metadata.Tags).CollectionChanged += MediaTagsChanged;
+                    foreach (MediaCharacter character in media.Metadata.Characters)
+                    {
+                        ((INotifyCollectionChanged)character.Tags).CollectionChanged += MediaCharacterTagsChanged;
+                    }
+                }
+            }
+        }
+
+        private void MediaTagsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if(e.NewItems != null)
+            {
+                foreach(MediaTag newTag in e.NewItems)
+                {
+                    if (!_allTags.Contains(newTag.Text))
+                    {
+                        _allTags.Add(newTag.Text);
+                    }
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (MediaTag oldTag in e.OldItems)
+                {
+                    bool remove = true;
+                    foreach (MediaCollection collection in _mediaCollections)
+                    {
+                        foreach (Media media in collection.Media)
+                        {
+                            foreach (MediaTag tag in media.Metadata.Tags)
+                            {
+                                if(tag.Text == oldTag.Text)
+                                {
+                                    remove = false;
+                                }
+                            }
+                        }
+                    }
+                    if(remove)
+                    {
+                        _allTags.Remove(oldTag.Text);
+                    }
+                }
             }
         }
 
