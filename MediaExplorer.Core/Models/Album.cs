@@ -37,6 +37,10 @@ namespace MediaExplorer.Core.Models
         private ObservableCollection<string> _allCharacterTags;
         public ReadOnlyObservableCollection<string> AllCharacterTags { get { return new ReadOnlyObservableCollection<string>(_allCharacterTags); } }
 
+        [field: NonSerialized]
+        private ObservableCollection<string> _allCharacterNames;
+        public ReadOnlyObservableCollection<string> AllCharacterNames { get { return new ReadOnlyObservableCollection<string>(_allCharacterNames); } }
+
         private Album()
         {
             Name = string.Empty;
@@ -44,6 +48,7 @@ namespace MediaExplorer.Core.Models
             _mediaCollections = new ObservableCollection<MediaCollection>();
             _allTags = new ObservableCollection<string>();
             _allCharacterTags = new ObservableCollection<string>();
+            _allCharacterNames = new ObservableCollection<string>();
         }
 
         public static async Task<Album> FromBasePathAsync(string basePath, byte[] key)
@@ -177,6 +182,7 @@ namespace MediaExplorer.Core.Models
         {
             _allTags = new ObservableCollection<string>();
             _allCharacterTags = new ObservableCollection<string>();
+            _allCharacterNames = new ObservableCollection<string>();
             foreach (MediaCollection collection in _mediaCollections)
             {
                 foreach(Media media in collection.Media)
@@ -196,6 +202,10 @@ namespace MediaExplorer.Core.Models
                             {
                                 _allCharacterTags.Add(tag.Text);
                             }
+                        }
+                        if(!_allCharacterNames.Contains(character.Name))
+                        {
+                            _allCharacterNames.Add(character.Name);
                         }
                         ((INotifyCollectionChanged)character.Tags).CollectionChanged += MediaCharacterTagsChanged;
                     }
@@ -220,6 +230,10 @@ namespace MediaExplorer.Core.Models
                             _allCharacterTags.Add(tag.Text);
                         }
                     }
+                    if(!_allCharacterNames.Contains(character.Name))
+                    {
+                        _allCharacterNames.Add(character.Name);
+                    }
                     ((INotifyCollectionChanged)character.Tags).CollectionChanged += MediaCharacterTagsChanged;
                 }
             }
@@ -228,30 +242,54 @@ namespace MediaExplorer.Core.Models
                 foreach (MediaCharacter oldCharacter in e.OldItems)
                 {
                     ReadOnlyObservableCollection<MediaTag> oldTags = oldCharacter.Tags;
-                    
-                    foreach(MediaTag oldTag in oldTags)
+                    bool removeCharacterName = true;
+
+                    foreach (MediaCollection collection in _mediaCollections)
                     {
-                        bool remove = true;
+                        foreach (Media media in collection.Media)
+                        {
+                            foreach (MediaCharacter character in media.Metadata.Characters)
+                            {
+                                if (character.Name == oldCharacter.Name)
+                                {
+                                    removeCharacterName = false;
+                                }
+                            }
+                        }
+                    }
+
+                    foreach (MediaTag oldTag in oldTags)
+                    {
+                        bool removeTag = true;
                         foreach (MediaCollection collection in _mediaCollections)
                         {
                             foreach (Media media in collection.Media)
                             {
                                 foreach(MediaCharacter character in media.Metadata.Characters)
                                 {
+                                    if(character.Name == oldCharacter.Name)
+                                    {
+                                        removeCharacterName = false;
+                                    }
+
                                     foreach (MediaTag tag in character.Tags)
                                     {
                                         if (tag.Text == oldTag.Text)
                                         {
-                                            remove = false;
+                                            removeTag = false;
                                         }
                                     }
                                 }
                             }
                         }
-                        if (remove)
+                        if (removeTag)
                         {
                             _allCharacterTags.Remove(oldTag.Text);
                         }
+                    }
+                    if(removeCharacterName)
+                    {
+                        _allCharacterNames.Remove(oldCharacter.Name);
                     }
                 }
             }

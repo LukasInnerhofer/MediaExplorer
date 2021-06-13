@@ -19,6 +19,6 @@
             <MenuItem Header="Media Collection From Http Source" Command="{Binding AddMediaCollectionFromHttpCommand}"/>
             <MenuItem Header="Media From File System" Command="{Binding AddMediaFromFileSystemCommand}"/>
         </MenuItem>
-        <ComboBox ItemsSource="{Binding AllCharacterTags}"></ComboBox>
+        <ComboBox ItemsSource="{Binding AllCharacterNames}"></ComboBox>
     </Menu>
 </mvxviews:MvxWpfView>
