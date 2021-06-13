@@ -59,6 +59,7 @@ namespace MediaExplorer.Core.Models
             album.Name = basePath.Split(Path.DirectorySeparatorChar).Last();
             album._basePath = basePath + Path.DirectorySeparatorChar + ".mediaexplorer";
             Directory.CreateDirectory(album._basePath);
+            album.FindEncryptedMedia();
             await album.FindMediaAsync(basePath);
             await album.FindMediaCollectionsAsync(basePath);
 
@@ -488,6 +489,26 @@ namespace MediaExplorer.Core.Models
                     _mediaCollections.Add(new MediaCollection(collectionName, media));
                     files.Clear();
                 }
+            }
+        }
+
+        private void FindEncryptedMedia()
+        {
+            foreach (string folder in Directory.EnumerateDirectories($"{_basePath}{Path.DirectorySeparatorChar}media"))
+            {
+                var media = new List<Media>();
+                foreach (string file in Directory.EnumerateFiles(folder))
+                {
+                    media.Add(new Media(file));
+                }
+                if(media.Count > 0)
+                {
+                    _mediaCollections.Add(new MediaCollection(folder.Split(Path.DirectorySeparatorChar).Last(), media));
+                }
+            }
+            foreach (string file in Directory.EnumerateFiles($"{_basePath}{Path.DirectorySeparatorChar}media"))
+            {
+                _mediaCollections.Add(new MediaCollection(Path.GetFileNameWithoutExtension(file), new Media(file)));
             }
         }
     }
