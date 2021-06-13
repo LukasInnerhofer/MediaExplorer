@@ -29,11 +29,16 @@ namespace MediaExplorer.Core.Models
         private ObservableCollection<MediaCollection> _mediaCollections;
         public ReadOnlyObservableCollection<MediaCollection> MediaCollections { get { return new ReadOnlyObservableCollection<MediaCollection>(_mediaCollections); } }
 
+        [field: NonSerialized]
+        private ObservableCollection<string> _allTags;
+        public ReadOnlyObservableCollection<string> AllTags { get { return new ReadOnlyObservableCollection<string>(_allTags); } }
+
         private Album()
         {
             Name = string.Empty;
             FilePath = string.Empty;
             _mediaCollections = new ObservableCollection<MediaCollection>();
+            _allTags = new ObservableCollection<string>();
         }
 
         public static async Task<Album> FromBasePathAsync(string basePath, byte[] key)
@@ -52,6 +57,8 @@ namespace MediaExplorer.Core.Models
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, album, album._key);
             }
+
+            album.CollectMetadata();
 
             return album;
         }
@@ -72,6 +79,7 @@ namespace MediaExplorer.Core.Models
                     }
                 }
             }
+            CollectMetadata();
         }
 
         public async Task AddMedia(List<Tuple<string, MemoryStream>> streams)
@@ -157,6 +165,75 @@ namespace MediaExplorer.Core.Models
             using(var fs = new FileStream(FilePath, FileMode.Create))
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, this, Key);
+            }
+        }
+
+        private void CollectMetadata()
+        {
+            _allTags = new ObservableCollection<string>();
+            foreach (MediaCollection collection in _mediaCollections)
+            {
+                foreach(Media media in collection.Media)
+                {
+                    foreach(MediaTag tag in media.Metadata.Tags)
+                    {
+                        if(!_allTags.Contains(tag.Text))
+                        {
+                            _allTags.Add(tag.Text);
+                        }
+                    }
+                    ((INotifyCollectionChanged)media.Metadata.Tags).CollectionChanged += MediaTagsChanged;
+                }
+                ((INotifyCollectionChanged)collection.Media).CollectionChanged += MediaChanged;
+            }
+        }
+
+        private void MediaChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (Media media in e.NewItems)
+                {
+                    ((INotifyCollectionChanged)media.Metadata.Tags).CollectionChanged += MediaTagsChanged;
+                }
+            }
+        }
+
+        private void MediaTagsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if(e.NewItems != null)
+            {
+                foreach(MediaTag newTag in e.NewItems)
+                {
+                    if (!_allTags.Contains(newTag.Text))
+                    {
+                        _allTags.Add(newTag.Text);
+                    }
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (MediaTag oldTag in e.OldItems)
+                {
+                    bool remove = true;
+                    foreach (MediaCollection collection in _mediaCollections)
+                    {
+                        foreach (Media media in collection.Media)
+                        {
+                            foreach (MediaTag tag in media.Metadata.Tags)
+                            {
+                                if(tag.Text == oldTag.Text)
+                                {
+                                    remove = false;
+                                }
+                            }
+                        }
+                    }
+                    if(remove)
+                    {
+                        _allTags.Remove(oldTag.Text);
+                    }
+                }
             }
         }
 

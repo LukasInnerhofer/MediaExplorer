@@ -25,6 +25,8 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
+        public MvxObservableCollection<string> AllTags => new MvxObservableCollection<string>(Album.AllTags);
+
         public MediaTagConditionViewModel TagFilter { get; private set; }
         public MediaCharacterConditionViewModel CharacterFilter { get; private set; }
 
