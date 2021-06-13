@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using MediaExplorer.Core.Services;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -38,6 +39,8 @@ namespace MediaExplorer.Core.ViewModels
                 }
             }
 
+            public EventHandler Failed;
+
             public Job(string url)
             {
                 Url = url;
@@ -69,6 +72,11 @@ namespace MediaExplorer.Core.ViewModels
                 catch(ThreadAbortException)
                 {
 
+                }
+                catch(WebException)
+                {
+                    Failed?.Invoke(this, new EventArgs());
+                    Done = true;
                 }
             }
 
@@ -175,6 +183,7 @@ namespace MediaExplorer.Core.ViewModels
                 {
                     var job = new Job(httpSource.Url);
                     job.DoneChanged += delegate (object _, EventArgs __) { OkCommand.RaiseCanExecuteChanged(); };
+                    job.Failed += OnJobFailed;
                     _jobs.Add(job);
                 }
             }
@@ -185,6 +194,13 @@ namespace MediaExplorer.Core.ViewModels
                     _jobs.RemoveAt(_jobs.FindIndex(x => x.Url == httpSource.Url));
                 }
             }
+        }
+
+        private void OnJobFailed(object sender, EventArgs e)
+        {
+            Job job = (Job)sender;
+            HttpSources.Remove(HttpSources.Where(x => x.Url == job.Url).Single());
+            Mvx.IoCProvider.Resolve<IMessageBoxService>().Show($"Failed to read from URL: {job.Url}.", "Failed to read from URL", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
         }
     }
 }
