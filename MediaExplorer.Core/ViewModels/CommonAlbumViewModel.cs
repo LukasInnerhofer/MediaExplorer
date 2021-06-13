@@ -6,6 +6,7 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        public MvxObservableCollection<string> AllTags => new MvxObservableCollection<string>(Album.AllTags);
+        public ReadOnlyObservableCollection<string> AllTags => Album.AllTags;
 
         public MediaTagConditionViewModel TagFilter { get; private set; }
         public MediaCharacterConditionViewModel CharacterFilter { get; private set; }

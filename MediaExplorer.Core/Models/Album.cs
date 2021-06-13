@@ -186,6 +186,21 @@ namespace MediaExplorer.Core.Models
                 }
                 ((INotifyCollectionChanged)collection.Media).CollectionChanged += MediaChanged;
             }
+            ((INotifyCollectionChanged)_mediaCollections).CollectionChanged += MediaCollectionsChanged;
+        }
+
+        private void MediaCollectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (MediaCollection collection in e.NewItems)
+                {
+                    foreach(Media media in collection.Media)
+                    {
+                        ((INotifyCollectionChanged)media.Metadata.Tags).CollectionChanged += MediaTagsChanged;
+                    }
+                }
+            }
         }
 
         private void MediaChanged(object sender, NotifyCollectionChangedEventArgs e)
