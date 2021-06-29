@@ -30,16 +30,6 @@ namespace MediaExplorer.Wpf.Views
         {
             InitializeComponent();
             Loaded += IterativeAlbumView_Loaded;
-            Unloaded += IterativeAlbumView_Unloaded;
-        }
-
-        private void IterativeAlbumView_Unloaded(object sender, RoutedEventArgs e)
-        {
-            Window window = Window.GetWindow(this);
-            foreach (InputBinding inputBinding in InputBindings)
-            {
-                window.InputBindings.Remove(inputBinding);
-            }
         }
 
         private void IterativeAlbumView_Loaded(object sender, RoutedEventArgs e)
