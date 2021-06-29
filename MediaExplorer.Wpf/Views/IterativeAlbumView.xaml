@@ -30,6 +30,7 @@
 
         <local:AlbumBarView Grid.ColumnSpan="3" Grid.Row="0" DataContext="{Binding .}"/>
         <WrapPanel Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2">
+            <Button Click="Button_Click">JEFF</Button>
             <Button Command="{Binding NavigateBeginCommand}" ContentTemplate="{StaticResource StartPoint}" Background="Transparent" BorderBrush="Transparent"/>
             <Button Command="{Binding NavigatePreviousCommand}" Content="&lt;&lt;"/>
             <Button Command="{Binding NavigatePreviousMediaCommand}" Content="&lt;"/>
