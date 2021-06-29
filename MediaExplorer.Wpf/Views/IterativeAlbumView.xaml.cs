@@ -1,4 +1,5 @@
 ﻿using MediaExplorer.Core.ViewModels;
+using MvvmCross.Commands;
 using MvvmCross.Platforms.Wpf.Views;
 using MvvmCross.ViewModels;
 using System;
@@ -27,6 +28,12 @@ namespace MediaExplorer.Wpf.Views
         public IterativeAlbumView() : base()
         {
             InitializeComponent();
+            Loaded += IterativeAlbumView_Loaded;
+        }
+
+        private void IterativeAlbumView_Loaded(object sender, RoutedEventArgs e)
+        {
+            Focus();
         }
     }
 }

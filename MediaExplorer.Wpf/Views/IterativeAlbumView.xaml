@@ -7,7 +7,17 @@
     xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
     xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800">
+    d:DesignHeight="450" d:DesignWidth="800"
+    Focusable="True">
+    <mvxviews:MvxWpfView.InputBindings>
+        <KeyBinding Key="F1" Command="{Binding NavigateBeginCommand}"/>
+        <KeyBinding Key="F2" Command="{Binding NavigatePreviousCommand}"/>
+        <KeyBinding Key="F3" Command="{Binding NavigatePreviousMediaCommand}"/>
+        <KeyBinding Key="F4" Command="{Binding NavigateNextMediaCommand}"/>
+        <KeyBinding Key="F5" Command="{Binding NavigateNextCommand}"/>
+        <KeyBinding Key="F6" Command="{Binding NavigateEndCommand}"/>
+    </mvxviews:MvxWpfView.InputBindings>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
