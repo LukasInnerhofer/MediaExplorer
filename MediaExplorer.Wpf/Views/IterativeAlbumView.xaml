@@ -10,12 +10,12 @@
     d:DesignHeight="450" d:DesignWidth="800"
     Focusable="True">
     <mvxviews:MvxWpfView.InputBindings>
-        <KeyBinding Key="F1" Command="{Binding NavigateBeginCommand}"/>
-        <KeyBinding Key="F2" Command="{Binding NavigatePreviousCommand}"/>
-        <KeyBinding Key="F3" Command="{Binding NavigatePreviousMediaCommand}"/>
-        <KeyBinding Key="F4" Command="{Binding NavigateNextMediaCommand}"/>
-        <KeyBinding Key="F5" Command="{Binding NavigateNextCommand}"/>
-        <KeyBinding Key="F6" Command="{Binding NavigateEndCommand}"/>
+        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding NavigateBeginCommand}"/>
+        <KeyBinding Key="D" Modifiers="Ctrl+Shift" Command="{Binding NavigatePreviousCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{Binding NavigatePreviousMediaCommand}"/>
+        <KeyBinding Key="J" Modifiers="Ctrl+Shift" Command="{Binding NavigateNextMediaCommand}"/>
+        <KeyBinding Key="K" Modifiers="Ctrl+Shift" Command="{Binding NavigateNextCommand}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl+Shift" Command="{Binding NavigateEndCommand}"/>
     </mvxviews:MvxWpfView.InputBindings>
     
     <Grid>
