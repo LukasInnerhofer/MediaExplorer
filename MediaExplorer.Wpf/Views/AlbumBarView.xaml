@@ -14,9 +14,10 @@
             </MenuItem.Header>
         </MenuItem>
         <MenuItem Header="Save" Command="{Binding SaveCommand}"/>
-        <MenuItem Header="Add Media">
-            <MenuItem Header="From Http Source" Command="{Binding AddMediaFromHttpCommand}"/>
-            <MenuItem Header="From File System" Command="{Binding AddMediaFromFileSystemCommand}"/>
+        <MenuItem Header="Add">
+            <MenuItem Header="Media From Http Source" Command="{Binding AddMediaFromHttpCommand}"/>
+            <MenuItem Header="Media Collection From Http Source" Command="{Binding AddMediaCollectionFromHttpCommand}"/>
+            <MenuItem Header="Media From File System" Command="{Binding AddMediaFromFileSystemCommand}"/>
         </MenuItem>
     </Menu>
 </mvxviews:MvxWpfView>

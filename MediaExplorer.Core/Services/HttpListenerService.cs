@@ -8,17 +8,29 @@ using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Services
 {
+    public class HttpObserver : IHttpObserver
+    {
+        public string Url { get; private set; }
+        public Action<HttpListenerContext> Callback { get; private set; }
+
+        public HttpObserver(string url, Action<HttpListenerContext> callback)
+        {
+            Url = url;
+            Callback = callback;
+        }
+    }
+
     class HttpListenerService : IHttpListenerService
     {
-        private List<Tuple<string, Action<HttpListenerContext>>> _observers;
+        private HashSet<IHttpObserver> _observers;
 
-        HttpListener _httpListener;
-        Thread _httpThread;
-        bool _exit = false;
+        private HttpListener _httpListener;
+        private Thread _httpThread;
+        private bool _exit = false;
 
         public HttpListenerService()
         {
-            _observers = new List<Tuple<string, Action<HttpListenerContext>>>();
+            _observers = new HashSet<IHttpObserver>();
 
             var threadStart = new ThreadStart(delegate ()
             {
@@ -27,26 +39,27 @@ namespace MediaExplorer.Core.Services
                 _httpListener.Start();
                 while (!_exit)
                 {
-                    HttpListenerContext context = _httpListener.GetContext();
+                    HttpListenerContext context;
+                    try
+                    {
+                       context = _httpListener.GetContext();
+                    }
+                    catch(HttpListenerException)
+                    {
+                        break;
+                    }
+                    
+                    string relativePath = context.Request.Url.AbsoluteUri.Replace("http://127.0.0.1:12345/", "");
+
                     lock (_observers)
                     {
-                        string relativePath = context.Request.Url.AbsoluteUri.Replace("http://127.0.0.1:12345/", "");
-
-                        if(relativePath == "Exit")
+                        foreach (HttpObserver observer in _observers)
                         {
-                            context.Response.OutputStream.Close();
-                            _httpListener.Stop();
-                            _httpListener.Close();
-                            break;
-                        }
-
-                        foreach (Tuple<string, Action<HttpListenerContext>> observer in _observers)
-                        {
-                            if (relativePath.Length >= observer.Item1.Length)
+                            if (relativePath.Length >= observer.Url.Length)
                             {
-                                if (relativePath.Substring(0, observer.Item1.Length) == observer.Item1)
+                                if (relativePath.Substring(0, observer.Url.Length) == observer.Url)
                                 {
-                                    observer.Item2.Invoke(context);
+                                    observer.Callback.Invoke(context);
                                 }
                             }
                         }
@@ -57,11 +70,25 @@ namespace MediaExplorer.Core.Services
             _httpThread.Start();
         }
 
-        public void Register(string url, Action<HttpListenerContext> cb)
+        public IHttpObserver CreateObserver(string url, Action<HttpListenerContext> callback)
+        {
+            return new HttpObserver(url, callback);
+        }
+
+        public void Register(IHttpObserver observer)
         {
             lock(_observers)
             {
-                _observers.Add(new Tuple<string, Action<HttpListenerContext>>(url, cb));
+                _observers.Add(observer);
+            }
+        }
+
+        public void Unregister(IHttpObserver observer)
+        {
+            // TODO: This sometimes blocks for a long time even though no one else has acquired the lock.
+            // lock(_observers)
+            {
+                _observers.Remove(observer);
             }
         }
 
@@ -70,8 +97,7 @@ namespace MediaExplorer.Core.Services
             _exit = true;
             if (_httpListener != null)
             {
-                HttpClient client = new HttpClient();
-                client.SendAsync(new HttpRequestMessage(HttpMethod.Get, "http://127.0.0.1:12345/Exit")).Wait();
+                _httpListener.Abort();
                 _httpThread.Join();
             }
         }

@@ -6,6 +6,7 @@ using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,9 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
+        public MediaTagConditionViewModel TagFilter { get; private set; }
+        public MediaCharacterConditionViewModel CharacterFilter { get; private set; }
+
         private IMvxCommand _saveCommand;
         public IMvxCommand SaveCommand =>
             _saveCommand ?? (_saveCommand = new MvxAsyncCommand(SaveAlbumAsync));
@@ -32,6 +36,10 @@ namespace MediaExplorer.Core.ViewModels
         private IMvxCommand _addMediaFromHttpCommand;
         public IMvxCommand AddMediaFromHttpCommand =>
             _addMediaFromHttpCommand ?? (_addMediaFromHttpCommand = new MvxAsyncCommand(AddMediaFromHttpAsync));
+
+        private IMvxCommand _addMediaCollectionFromHttpCommand;
+        public IMvxCommand AddMediaCollectionFromHttpCommand =>
+            _addMediaCollectionFromHttpCommand ?? (_addMediaCollectionFromHttpCommand = new MvxAsyncCommand(AddMediaCollectionFromHttpAsync));
 
         private IMvxCommand _addMediaFromFileSystemCommand;
         public IMvxCommand AddMediaFromFileSystemCommand =>
@@ -43,7 +51,9 @@ namespace MediaExplorer.Core.ViewModels
 
         public CommonAlbumViewModel()
         {
-
+            Album = new Album();
+            TagFilter = new MediaTagConditionViewModel(new Condition(() => new MediaTag(string.Empty)));
+            CharacterFilter = new MediaCharacterConditionViewModel(new Condition(() => new MediaCharacter(string.Empty)), Album.AllCharacterTags);
         }
 
         private async Task SaveAlbumAsync()
@@ -55,7 +65,14 @@ namespace MediaExplorer.Core.ViewModels
         {
             await Album.AddMedia(
                 await Mvx.IoCProvider.Resolve<IMvxNavigationService>().
-                Navigate<HttpSourceDialogViewModel, object, List<KeyValuePair<string, MemoryStream>>>(null));
+                Navigate<HttpSourceDialogViewModel, object, List<Tuple<string, MemoryStream>>>(null));
+        }
+
+        private async Task AddMediaCollectionFromHttpAsync()
+        {
+            await Album.AddMediaCollection(
+                await Mvx.IoCProvider.Resolve<IMvxNavigationService>().
+                Navigate<HttpSourceDialogViewModel, object, List<Tuple<string, MemoryStream>>>(null));
         }
 
         private async Task AddMediaFromFileSystem()

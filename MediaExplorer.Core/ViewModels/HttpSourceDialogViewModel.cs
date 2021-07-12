@@ -1,4 +1,5 @@
-﻿using MvvmCross;
+﻿using MediaExplorer.Core.Services;
+using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
@@ -13,7 +14,7 @@ using System.Threading;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class HttpSourceDialogViewModel : MvxViewModel<object, List<KeyValuePair<string, MemoryStream>>>
+    public class HttpSourceDialogViewModel : MvxViewModel<object, List<Tuple<string, MemoryStream>>>
     {
         private class Job : INotifyPropertyChanged
         {
@@ -37,6 +38,8 @@ namespace MediaExplorer.Core.ViewModels
                     RaisePropertyChanged();
                 }
             }
+
+            public EventHandler Failed;
 
             public Job(string url)
             {
@@ -69,6 +72,11 @@ namespace MediaExplorer.Core.ViewModels
                 catch(ThreadAbortException)
                 {
 
+                }
+                catch(WebException)
+                {
+                    Failed?.Invoke(this, new EventArgs());
+                    Done = true;
                 }
             }
 
@@ -133,14 +141,14 @@ namespace MediaExplorer.Core.ViewModels
 
         private bool AddUrlCanExecute()
         {
-            return NewUrl != string.Empty;
+            return NewUrl != string.Empty && !_jobs.Any(x => x.Url == NewUrl);
         }
 
         private void Ok()
         {
             Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(
                 this,
-                _jobs.Select(x => new KeyValuePair<string, MemoryStream>(HttpSources.Where(y => y.Url == x.Url).Single().FileExtension, x.Stream)).ToList());
+                _jobs.Select(x => new Tuple<string, MemoryStream>(HttpSources.Where(y => y.Url == x.Url).Single().FileExtension, x.Stream)).ToList());
         }
 
         private bool OkCanExecute()
@@ -164,7 +172,7 @@ namespace MediaExplorer.Core.ViewModels
                     job.Cancel();
                 }
             }
-            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this, new List<KeyValuePair<string, MemoryStream>>());
+            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Close(this, new List<Tuple<string, MemoryStream>>());
         }
 
         private void OnHttpSourcesChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -175,6 +183,7 @@ namespace MediaExplorer.Core.ViewModels
                 {
                     var job = new Job(httpSource.Url);
                     job.DoneChanged += delegate (object _, EventArgs __) { OkCommand.RaiseCanExecuteChanged(); };
+                    job.Failed += OnJobFailed;
                     _jobs.Add(job);
                 }
             }
@@ -185,6 +194,13 @@ namespace MediaExplorer.Core.ViewModels
                     _jobs.RemoveAt(_jobs.FindIndex(x => x.Url == httpSource.Url));
                 }
             }
+        }
+
+        private void OnJobFailed(object sender, EventArgs e)
+        {
+            Job job = (Job)sender;
+            HttpSources.Remove(HttpSources.Where(x => x.Url == job.Url).Single());
+            Mvx.IoCProvider.Resolve<IMessageBoxService>().Show($"Failed to read from URL: {job.Url}.", "Failed to read from URL", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
         }
     }
 }

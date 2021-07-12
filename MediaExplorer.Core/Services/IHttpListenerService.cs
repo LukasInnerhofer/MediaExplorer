@@ -5,9 +5,17 @@ using System.Text;
 
 namespace MediaExplorer.Core.Services
 {
+    public interface IHttpObserver
+    {
+        string Url { get; }
+        Action<HttpListenerContext> Callback { get; }
+    }
+
     public interface IHttpListenerService
     {
-        void Register(string url, Action<HttpListenerContext> cb);
+        IHttpObserver CreateObserver(string url, Action<HttpListenerContext> callback);
+        void Register(IHttpObserver observer);
+        void Unregister(IHttpObserver observer);
         void Exit();
     }
 }

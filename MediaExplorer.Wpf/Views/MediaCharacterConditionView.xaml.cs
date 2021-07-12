@@ -1,8 +1,4 @@
-﻿using MediaExplorer.Core.ViewModels;
-using MvvmCross.Commands;
-using MvvmCross.Platforms.Wpf.Views;
-using MvvmCross.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,16 +12,19 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MediaExplorer.Core.ViewModels;
+using MvvmCross.Platforms.Wpf.Views;
+using MvvmCross.ViewModels;
 
 namespace MediaExplorer.Wpf.Views
 {
     /// <summary>
-    /// Interaction logic for AlbumBarView.xaml
+    /// Interaction logic for MediaCharacterConditionView.xaml
     /// </summary>
-    [MvxViewFor(typeof(CommonAlbumViewModel))]
-    public partial class AlbumBarView : MvxWpfView
+    [MvxViewFor(typeof(MediaCharacterConditionViewModel))]
+    public partial class MediaCharacterConditionView : MvxWpfView
     {
-        public AlbumBarView() : base()
+        public MediaCharacterConditionView()
         {
             InitializeComponent();
         }

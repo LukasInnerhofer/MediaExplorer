@@ -27,6 +27,7 @@ namespace MediaExplorer.Wpf.Views
         public MediaView() : base()
         {
             InitializeComponent();
+            MediaElement.Play();
         }
 
         private void MediaElement_MediaEnded(object sender, RoutedEventArgs e)

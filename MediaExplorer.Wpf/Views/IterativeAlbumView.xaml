@@ -7,7 +7,17 @@
     xmlns:local="clr-namespace:MediaExplorer.Wpf.Views"
     xmlns:mvxviews="clr-namespace:MvvmCross.Platforms.Wpf.Views;assembly=MvvmCross.Platforms.Wpf"
     mc:Ignorable="d" 
-    d:DesignHeight="450" d:DesignWidth="800">
+    d:DesignHeight="450" d:DesignWidth="800"
+    Focusable="True">
+    <mvxviews:MvxWpfView.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl+Shift" Command="{Binding NavigateBeginCommand}"/>
+        <KeyBinding Key="D" Modifiers="Ctrl+Shift" Command="{Binding NavigatePreviousCommand}"/>
+        <KeyBinding Key="F" Modifiers="Ctrl+Shift" Command="{Binding NavigatePreviousMediaCommand}"/>
+        <KeyBinding Key="J" Modifiers="Ctrl+Shift" Command="{Binding NavigateNextMediaCommand}"/>
+        <KeyBinding Key="K" Modifiers="Ctrl+Shift" Command="{Binding NavigateNextCommand}"/>
+        <KeyBinding Key="L" Modifiers="Ctrl+Shift" Command="{Binding NavigateEndCommand}"/>
+    </mvxviews:MvxWpfView.InputBindings>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -18,13 +28,51 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <local:AlbumBarView Grid.ColumnSpan="2" Grid.Row="0" DataContext="{Binding .}"/>
-        <WrapPanel Grid.Column="1" Grid.Row="0">
-            <Button Command="{Binding NavigatePreviousCommand}" Content="&lt;&lt;"/>
-            <Button Command="{Binding NavigatePreviousMediaCommand}" Content="&lt;"/>
-            <Button Command="{Binding NavigateNextMediaCommand}" Content="&gt;"/>
-            <Button Command="{Binding NavigateNextCommand}" Content="&gt;&gt;"/>
-        </WrapPanel>
-        <local:MediaView Grid.ColumnSpan="2" Grid.Row="1" DataContext="{Binding Media}"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <local:AlbumBarView Grid.Column="0" DataContext="{Binding .}"/>
+            <Menu Grid.Column="1">
+                <MenuItem Header="Navigate">
+                    <MenuItem Header="Begin" Command="{Binding NavigateBeginCommand}" InputGestureText="Ctrl+Shift+S"/>
+                    <MenuItem Header="Previous in Album" Command="{Binding NavigatePreviousCommand}" InputGestureText="Ctrl+Shift+D"/>
+                    <MenuItem Header="Previous in Collection" Command="{Binding NavigatePreviousMediaCommand}" InputGestureText="Ctrl+Shift+F"/>
+                    <MenuItem Header="Next in Collection" Command="{Binding NavigateNextMediaCommand}" InputGestureText="Ctrl+Shift+J"/>
+                    <MenuItem Header="Next in Album" Command="{Binding NavigateNextCommand}" InputGestureText="Ctrl+Shift+K"/>
+                    <MenuItem Header="End" Command="{Binding NavigateEndCommand}" InputGestureText="Ctrl+Shift+L"/>
+                </MenuItem>
+            </Menu>
+        </Grid>
+
+
+        <Grid Grid.ColumnSpan="2" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <local:MediaView Grid.Column="0" DataContext="{Binding Media}"/>
+
+            <Expander Grid.Column="1">
+                <ScrollViewer>
+                    <StackPanel>
+                        <local:MediaMetadataView DataContext="{Binding MediaMetadata}" Margin="5,0,0,0"/>
+                        <GroupBox Header="Filters">
+                            <StackPanel>
+                                <GroupBox Header="Tags">
+                                    <local:MediaTagConditionView DataContext="{Binding TagFilter}"/>
+                                </GroupBox>
+                                <GroupBox Header="Characters">
+                                    <local:MediaCharacterConditionView DataContext="{Binding CharacterFilter}"/>
+                                </GroupBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </Expander>
+        </Grid>
     </Grid>
 </mvxviews:MvxWpfView>

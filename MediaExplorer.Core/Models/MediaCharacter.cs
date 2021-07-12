@@ -37,5 +37,14 @@ namespace MediaExplorer.Core.Models
         {
             _tags.Remove(_tags.First(x => x.Text == text));
         }
+
+        public void Rename(string newName)
+        {
+            if(string.IsNullOrEmpty(newName))
+            {
+                throw new ArgumentException("Parameter must not be empty", newName);
+            }
+            Name = newName;
+        }
     }
 }

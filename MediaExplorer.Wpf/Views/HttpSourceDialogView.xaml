@@ -18,8 +18,13 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding NewUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Grid.Column="1" Grid.Row="0" Command="{Binding AddUrlCommand}" Content="Add Url"/>
+        <TextBox Grid.Column="0" Grid.Row="0" Text="{Binding NewUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox.InputBindings>
+                <KeyBinding Key="Return" Command="{Binding AddUrlCommand}"/>
+            </TextBox.InputBindings>
+        </TextBox>
+
+        <Button Grid.Column="1" Grid.Row="0" Command="{Binding AddUrlCommand}" Style="{StaticResource AddStyle}"/>
 
         <ListView Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding HttpSources}" Margin="0,2,0,0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemContainerStyle>
