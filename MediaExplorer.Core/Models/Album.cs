@@ -63,7 +63,7 @@ namespace MediaExplorer.Core.Models
             await album.FindMediaAsync(basePath);
             await album.FindMediaCollectionsAsync(basePath);
 
-            album.FilePath = album._basePath + Path.DirectorySeparatorChar + "album";
+            album.FilePath = album._basePath + Path.DirectorySeparatorChar + ".media_explorer_album";
             using (var fs = new FileStream(album.FilePath, FileMode.Create))
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, album, album._key);
@@ -78,10 +78,10 @@ namespace MediaExplorer.Core.Models
         {
             _key = key;
             FilePath = filePath;
-            if(filePath.Replace(Path.DirectorySeparatorChar + "album", "") != _basePath)
+            if(filePath.Replace(Path.DirectorySeparatorChar + ".media_explorer_album", "") != _basePath)
             {
                 string oldBasePath = _basePath;
-                _basePath = FilePath.Replace(Path.DirectorySeparatorChar + "album", "");
+                _basePath = FilePath.Replace(Path.DirectorySeparatorChar + ".media_explorer_album", "");
                 foreach (MediaCollection collection in _mediaCollections)
                 {
                     foreach (Media media in collection.Media)

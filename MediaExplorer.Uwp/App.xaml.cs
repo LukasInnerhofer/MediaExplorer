@@ -24,7 +24,13 @@ namespace MediaExplorer.Uwp
 {
     public partial class UwpApplication : MvxApplication<MvxWindowsSetup<Core.App>, Core.App>
     {
+        protected override void RunAppStart(IActivatedEventArgs activationArgs)
+        {
+            base.RunAppStart(activationArgs);
 
+            Mvx.IoCProvider.RegisterSingleton<IFileDialogService>(new FileDialogService());
+            Mvx.IoCProvider.RegisterSingleton<IFileSystemService>(new FileSystemService());
+        }
     }
 
     /// <summary>

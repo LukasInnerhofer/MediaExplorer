@@ -45,10 +45,20 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand OpenCommand =>
             _openCommand ?? (_openCommand = new MvxCommand(Open, OpenCanExecute));
 
-        public VirtualAlbumFileViewModel(VirtualAlbumFile albumFile) : base()
+        private VirtualAlbumFileViewModel(VirtualAlbumFile albumFile, bool isNameReadOnly) : base()
         {
             AlbumFile = albumFile;
-            IsNameReadOnly = true;
+            IsNameReadOnly = isNameReadOnly;
+        }
+
+        public VirtualAlbumFileViewModel() : this(null)
+        {
+
+        }
+
+        public VirtualAlbumFileViewModel(VirtualAlbumFile albumFile) : this(albumFile, true)
+        {
+            
         }
 
         private void ConfirmRename()

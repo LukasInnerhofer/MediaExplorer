@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class CreateProfileViewModel : MvxViewModel
+    public class CreateProfileViewModel : MvxViewModel<string>
     {
+        private string _profilePath;
+
         private string _key;
         public string Key
         {
@@ -33,15 +35,16 @@ namespace MediaExplorer.Core.ViewModels
 
         }
 
-        public override void Prepare()
+        public override void Prepare(string profilePath)
         {
             Key = string.Empty;
+            _profilePath = profilePath;
         }
 
         private async Task Create()
         {
-            await Mvx.IoCProvider.Resolve<IFileSystemService>().CreateFileAsync($"{Directory.GetCurrentDirectory()}{Path.DirectorySeparatorChar}profile");
-            using (var fs = await Mvx.IoCProvider.Resolve<IFileSystemService>().OpenFileAsync("profile"))//new FileStream("profile", FileMode.Create))
+            await Mvx.IoCProvider.Resolve<IFileSystemService>().CreateFileAsync(_profilePath);
+            using (var fs = await Mvx.IoCProvider.Resolve<IFileSystemService>().OpenFileAsync(_profilePath))
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(
                     fs,

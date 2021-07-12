@@ -31,7 +31,7 @@ namespace MediaExplorer.Core.Models
         {
             _key = param as byte[];
 
-            while (!File.Exists(_realPath))
+            while (!await Mvx.IoCProvider.Resolve<IFileSystemService>().FileExists(_realPath))
             {
                 MessageBoxResult result = Mvx.IoCProvider.Resolve<IMessageBoxService>().Show(
                     $"Album {Name} does not exist. Would you like to update its path?",
@@ -43,7 +43,7 @@ namespace MediaExplorer.Core.Models
                 {
                     IOpenFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
                     dialog.RestoreDirectory = true;
-                    if(dialog.ShowDialog() == OpenFileDialogResult.Ok)
+                    if(await dialog.ShowDialog() == OpenFileDialogResult.Ok)
                     {
                         _realPath = dialog.FileName;
                     }

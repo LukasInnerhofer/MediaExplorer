@@ -9,7 +9,14 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-
-    </Grid>
+    <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Width="300">
+        <TextBlock Margin="0,0,0,8" TextWrapping="Wrap" Text="Enter private key to open profile."/>
+        <PasswordBox Margin="0,0,0,8" Password="{Binding Key, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+        <Button
+            Content="Open"
+            Command="{Binding OpenCommand}"/>
+    </StackPanel>
 </mvxviews:MvxWindowsPage>

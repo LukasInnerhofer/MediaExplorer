@@ -16,7 +16,7 @@ namespace MediaExplorer.Core
                 RegisterAsLazySingleton();
             Mvx.IoCProvider.RegisterSingleton<Services.ICryptographyService>(new Services.CryptographyService(Aes.Create(), SHA256.Create()));
 
-            File.WriteAllBytes(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + Path.DirectorySeparatorChar + "placeholder.bmp", Resources.Placeholder);
+            //File.WriteAllBytes(Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + Path.DirectorySeparatorChar + "placeholder.bmp", Resources.Placeholder);
 
             RegisterCustomAppStart<AppStart>();
         }

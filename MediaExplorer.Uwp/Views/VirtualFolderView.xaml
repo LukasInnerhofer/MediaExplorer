@@ -1,5 +1,5 @@
 ﻿<mvxviews:MvxWindowsPage
-    x:Class="MediaExplorer.Uwp.Views.CreateProfileView"
+    x:Class="MediaExplorer.Uwp.Views.VirtualFolderView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MediaExplorer.Uwp.Views"
@@ -9,14 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <StackPanel
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Width="300">
-        <TextBlock Margin="0,0,0,8" TextWrapping="Wrap" Text="Create a new profile by entering your private key."/>
-        <PasswordBox Margin="0,0,0,8" Password="{Binding Key, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
-        <Button
-            Content="Create"
-            Command="{Binding CreateCommand}"/>
-    </StackPanel>
+    <Grid>
+        <TextBlock Text="Folder"/>
+    </Grid>
 </mvxviews:MvxWindowsPage>

@@ -122,13 +122,28 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\CreateFileDialog.cs" />
+    <Compile Include="Models\OpenFileDialog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\FileDialogService.cs" />
     <Compile Include="Services\FileSystemService.cs" />
+    <Compile Include="Views\ChooseProfileView.xaml.cs">
+      <DependentUpon>ChooseProfileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\CreateProfileView.xaml.cs">
       <DependentUpon>CreateProfileView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OpenProfileView.xaml.cs">
       <DependentUpon>OpenProfileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProfileView.xaml.cs">
+      <DependentUpon>ProfileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VirtualAlbumFileView.xaml.cs">
+      <DependentUpon>VirtualAlbumFileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\VirtualFolderView.xaml.cs">
+      <DependentUpon>VirtualFolderView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +170,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\ChooseProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\CreateProfileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -163,10 +182,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VirtualAlbumFileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\VirtualFolderView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.11</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
+      <Version>7.0.2</Version>
     </PackageReference>
     <PackageReference Include="MvvmCross">
       <Version>7.1.2</Version>

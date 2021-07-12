@@ -35,10 +35,20 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand CancelRenameCommand =>
             _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
 
-        public VirtualFolderViewModel(VirtualFolder folder) : base()
+        private VirtualFolderViewModel(VirtualFolder folder, bool isNameReadOnly) : base()
         {
             Folder = folder;
-            IsNameReadOnly = true;
+            IsNameReadOnly = isNameReadOnly;
+        }
+
+        public VirtualFolderViewModel() : this(null)
+        {
+
+        }
+
+        public VirtualFolderViewModel(VirtualFolder folder) : this(folder, true)
+        {
+
         }
 
         private void ConfirmRename()

@@ -5,16 +5,15 @@ using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Models
 {
-    public enum OpenFileDialogResult { None, Ok, Cancel };
+    public enum CreateFileDialogResult { None, Ok, Cancel };
 
-    public interface IOpenFileDialog
+    public interface ICreateFileDialog
     {
         IReadOnlyList<string> FileNames { get; }
         string FileName { get; }
         bool RestoreDirectory { get; set; }
-        bool Multiselect { get; set; }
         IList<string> Filter { get; }
 
-        Task<OpenFileDialogResult> ShowDialog();
+        Task<CreateFileDialogResult> ShowDialog();
     }
 }

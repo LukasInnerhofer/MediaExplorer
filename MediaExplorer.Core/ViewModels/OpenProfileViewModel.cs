@@ -10,8 +10,10 @@ using MvvmCross;
 
 namespace MediaExplorer.Core.ViewModels
 {
-    public class OpenProfileViewModel : MvxViewModel
+    public class OpenProfileViewModel : MvxViewModel<string>
     {
+        private string _profilePath;
+
         private string _key;
         public string Key
         {
@@ -32,24 +34,17 @@ namespace MediaExplorer.Core.ViewModels
             Key = string.Empty;
         }
 
-        public override void Prepare()
+        public override void Prepare(string profilePath)
         {
             base.Prepare();
-        }
 
-        public override void ViewAppeared()
-        {
-            base.ViewAppeared();
-            if (!File.Exists(Constants.File.Profile))
-            {
-                Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate<CreateProfileViewModel>();
-            }
+            _profilePath = profilePath;
         }
 
         private async Task Open()
         {
             Models.Profile profile;
-            using(var fs = new FileStream("profile", FileMode.Open))
+            using(var fs = await Mvx.IoCProvider.Resolve<IFileSystemService>().OpenFileAsync(_profilePath))
             {
                 byte[] keyHash = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(Key));
 

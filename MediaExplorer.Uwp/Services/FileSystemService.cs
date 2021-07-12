@@ -16,12 +16,22 @@ namespace MediaExplorer.Uwp.Services
         {
             string fileName = path.Split(Path.DirectorySeparatorChar).Last();
             StorageFolder folder = await StorageFolder.GetFolderFromPathAsync(path.Replace(fileName, ""));
+            StorageFile file = await folder.GetFileAsync(fileName);
+            if (file != null)
+            {
+                await file.DeleteAsync();
+            }
             await folder.CreateFileAsync(fileName);
         }
 
         public async Task<FileStream> OpenFileAsync(string path)
         {
             return new FileStream(WindowsRuntimeStorageExtensions.CreateSafeFileHandle(await StorageFile.GetFileFromPathAsync(path)), FileAccess.ReadWrite);
+        }
+
+        public async Task<bool> FileExists(string path)
+        {
+            return await StorageFile.GetFileFromPathAsync(path) != null;
         }
     }
 }

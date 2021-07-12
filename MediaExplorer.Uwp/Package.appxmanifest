@@ -41,11 +41,25 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="filetypes">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.media_explorer_album</uap:FileType>
+              <uap:FileType>.jpg</uap:FileType>
+              <uap:FileType>.jpeg</uap:FileType>
+              <uap:FileType>.png</uap:FileType>
+              <uap:FileType>.media_explorer_profile</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
     </Application>
   </Applications>
 
   <Capabilities>
     <Capability Name="internetClient" />
     <rescap:Capability Name="broadFileSystemAccess"/>
+    <uap:Capability Name="removableStorage"/>
   </Capabilities>
 </Package>

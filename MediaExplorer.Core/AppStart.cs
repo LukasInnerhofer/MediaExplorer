@@ -13,7 +13,7 @@ namespace MediaExplorer.Core
 
         protected override Task NavigateToFirstViewModel(object hint = null)
         { 
-            return NavigationService.Navigate<ViewModels.OpenProfileViewModel>();
+            return NavigationService.Navigate<ViewModels.ChooseProfileViewModel>();
         }
     }
 }
