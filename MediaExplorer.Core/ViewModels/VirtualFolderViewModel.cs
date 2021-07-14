@@ -70,7 +70,12 @@ namespace MediaExplorer.Core.ViewModels
                     errorMessage = $"A folder with the name \"{Name}\" already exists.";
                 }
                 Name = Folder.Name;
-                Mvx.IoCProvider.Resolve<IMessageBoxService>().Show(errorMessage, "Error Renaming Folder", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
+                Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
+                    errorMessage, 
+                    "Error Renaming Folder", 
+                    MessageBoxButton.Ok, 
+                    MessageBoxImage.Error, 
+                    MessageBoxResult.Ok).Wait();
             }
         }
 

@@ -80,7 +80,7 @@ namespace MediaExplorer.Core.ViewModels
             IOpenFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
             dialog.RestoreDirectory = true;
             dialog.Multiselect = true;
-            if(await dialog.ShowDialog() == OpenFileDialogResult.Ok)
+            if(await dialog.ShowDialogAsync() == OpenFileDialogResult.Ok)
             {
                 await Album.AddMedia(new List<string>(dialog.FileNames));
             }

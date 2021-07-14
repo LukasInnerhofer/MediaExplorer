@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MediaExplorer.Core.Services
 {
@@ -10,10 +11,10 @@ namespace MediaExplorer.Core.Services
 
     public interface IMessageBoxService
     {
-        MessageBoxResult Show(string message);
-        MessageBoxResult Show(string message, string title);
-        MessageBoxResult Show(string message, string title, MessageBoxButton button);
-        MessageBoxResult Show(string message, string title, MessageBoxButton button, MessageBoxImage image);
-        MessageBoxResult Show(string message, string title, MessageBoxButton button, MessageBoxImage image, MessageBoxResult def);
+        Task<MessageBoxResult> ShowAsync(string message);
+        Task<MessageBoxResult> ShowAsync(string message, string title);
+        Task<MessageBoxResult> ShowAsync(string message, string title, MessageBoxButton button);
+        Task<MessageBoxResult> ShowAsync(string message, string title, MessageBoxButton button, MessageBoxImage image);
+        Task<MessageBoxResult> ShowAsync(string message, string title, MessageBoxButton button, MessageBoxImage image, MessageBoxResult def);
     }
 }

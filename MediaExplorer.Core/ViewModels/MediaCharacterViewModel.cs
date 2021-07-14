@@ -176,7 +176,12 @@ namespace MediaExplorer.Core.ViewModels
             }
             catch(ArgumentException)
             {
-                Mvx.IoCProvider.Resolve<IMessageBoxService>().Show("New name must not be empty", "Error Renaming Character", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
+                Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
+                    "New name must not be empty", 
+                    "Error Renaming Character", 
+                    MessageBoxButton.Ok, 
+                    MessageBoxImage.Error, 
+                    MessageBoxResult.Ok).Wait();
                 Name = Character.Name;
             }
         }

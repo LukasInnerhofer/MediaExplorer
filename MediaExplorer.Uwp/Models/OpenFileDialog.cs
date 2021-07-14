@@ -28,7 +28,7 @@ namespace MediaExplorer.Uwp.Models
             _filter = new List<string>();
         }
 
-        public async Task<OpenFileDialogResult> ShowDialog()
+        public async Task<OpenFileDialogResult> ShowDialogAsync()
         {
             _fileNames = new List<string>();
             OpenFileDialogResult result = OpenFileDialogResult.None;

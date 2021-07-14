@@ -200,7 +200,12 @@ namespace MediaExplorer.Core.ViewModels
         {
             Job job = (Job)sender;
             HttpSources.Remove(HttpSources.Where(x => x.Url == job.Url).Single());
-            Mvx.IoCProvider.Resolve<IMessageBoxService>().Show($"Failed to read from URL: {job.Url}.", "Failed to read from URL", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
+            Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
+                $"Failed to read from URL: {job.Url}.", 
+                "Failed to read from URL",
+                MessageBoxButton.Ok, 
+                MessageBoxImage.Error, 
+                MessageBoxResult.Ok).Wait();
         }
     }
 }

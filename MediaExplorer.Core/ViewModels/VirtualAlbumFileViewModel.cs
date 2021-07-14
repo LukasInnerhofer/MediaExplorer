@@ -80,7 +80,12 @@ namespace MediaExplorer.Core.ViewModels
                     errorMessage = $"An album with the name \"{Name}\" already exists.";
                 }
                 Name = AlbumFile.Name;
-                Mvx.IoCProvider.Resolve<IMessageBoxService>().Show(errorMessage, "Error Renaming Album", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
+                Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
+                    errorMessage, 
+                    "Error Renaming Album", 
+                    MessageBoxButton.Ok,
+                    MessageBoxImage.Error, 
+                    MessageBoxResult.Ok).Wait();
             }
         }
 

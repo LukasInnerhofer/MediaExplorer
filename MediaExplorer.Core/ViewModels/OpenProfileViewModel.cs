@@ -54,7 +54,12 @@ namespace MediaExplorer.Core.ViewModels
                 }
                 catch(InvalidKeyException)
                 {
-                    Mvx.IoCProvider.Resolve<IMessageBoxService>().Show("Invalid key.", "Error Opening Profile", MessageBoxButton.Ok, MessageBoxImage.Error, MessageBoxResult.Ok);
+                    await Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
+                        "Invalid key.", 
+                        "Error Opening Profile", 
+                        MessageBoxButton.Ok, 
+                        MessageBoxImage.Error, 
+                        MessageBoxResult.Ok);
                     return;
                 }
                 await profile.InitializeNonSerializedMembers(keyHash);

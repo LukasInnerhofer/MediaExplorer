@@ -51,7 +51,7 @@
                     </local:VirtualFolderView>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type viewmodels:VirtualAlbumFileViewModel}">
-                    <local:VirtualAlbumFileView DataContext="{Binding .}"></local:VirtualAlbumFileView>
+                    <local:VirtualAlbumFileView DataContext="{Binding .}"/>
                 </DataTemplate>
             </ListView.Resources>
         </ListView>

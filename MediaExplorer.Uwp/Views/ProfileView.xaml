@@ -7,19 +7,36 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mvxviews="using:MvvmCross.Platforms.Uap.Views"
     xmlns:viewmodels="using:MediaExplorer.Core.ViewModels"
+    xmlns:helpers="using:MediaExplorer.Uwp.Helpers"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <ListView ItemsSource="{Binding ViewModels}">
-            <ListView.Resources>
-                <DataTemplate x:Key="VirtualFolderTemplate" x:DataType="viewmodels:VirtualFolderViewModel">
-                    <local:VirtualFolderView DataContext="{Binding .}"/>
-                </DataTemplate>
-                <DataTemplate x:Key="VirtualAlbumTemplate" x:DataType="viewmodels:VirtualAlbumFileViewModel">
-                    <local:VirtualAlbumFileView DataContext="{Binding .}"/>
-                </DataTemplate>
-                </ListView.Resources>
-        </ListView>
-    </Grid>
+    <mvxviews:MvxWindowsPage.Resources>
+        <DataTemplate x:Key="VirtualAlbumFileViewModelTemplate">
+            <local:VirtualAlbumFileView DataContext="{Binding}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="VirtualFolderViewModelTemplate">
+            <local:VirtualFolderView DataContext="{Binding}"/>
+        </DataTemplate>
+
+        <helpers:VirtualFileSystemObjectViewModelTemplateSelector 
+            x:Key="VirtualFileSystemObjectViewModelTemplateSelector"
+            VirtualAlbumFileViewModelTemplate="{StaticResource VirtualAlbumFileViewModelTemplate}"
+            VirtualFolderViewModelTemplate="{StaticResource VirtualFolderViewModelTemplate}"/>
+    </mvxviews:MvxWindowsPage.Resources>
+
+    <StackPanel>
+        <muxc:MenuBar>
+            <muxc:MenuBarItem Title="New" >
+                <MenuFlyoutItem Text="Folder" Icon="Folder" Command="{Binding NewFolderCommand}"/>
+                <MenuFlyoutItem Text="Album" Command="{Binding NewAlbumCommand}"/>
+            </muxc:MenuBarItem>
+            <muxc:MenuBarItem Title="Add">
+                <MenuFlyoutItem Text="Existing Album" Icon="OpenFile" Command="{Binding AddExistingAlbumCommand}"/>
+            </muxc:MenuBarItem>
+        </muxc:MenuBar>
+
+        <ListView ItemsSource="{Binding ViewModels}" ItemTemplateSelector="{StaticResource VirtualFileSystemObjectViewModelTemplateSelector}"/>
+    </StackPanel>
 </mvxviews:MvxWindowsPage>

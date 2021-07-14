@@ -15,6 +15,6 @@ namespace MediaExplorer.Core.Models
         bool Multiselect { get; set; }
         IList<string> Filter { get; }
 
-        Task<OpenFileDialogResult> ShowDialog();
+        Task<OpenFileDialogResult> ShowDialogAsync();
     }
 }

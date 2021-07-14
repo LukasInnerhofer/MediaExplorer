@@ -30,6 +30,7 @@ namespace MediaExplorer.Uwp
 
             Mvx.IoCProvider.RegisterSingleton<IFileDialogService>(new FileDialogService());
             Mvx.IoCProvider.RegisterSingleton<IFileSystemService>(new FileSystemService());
+            Mvx.IoCProvider.RegisterSingleton<IMessageBoxService>(new MessageBoxService());
         }
     }
 

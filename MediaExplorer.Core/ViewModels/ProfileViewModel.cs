@@ -84,6 +84,10 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand NewAlbumCommand =>
             _newAlbumCommand ?? (_newAlbumCommand = new MvxAsyncCommand(NewAlbumAsync));
 
+        private IMvxCommand _addExistingAlbumCommand;
+        public IMvxCommand AddExistingAlbumCommand =>
+            _addExistingAlbumCommand ?? (_addExistingAlbumCommand = new MvxAsyncCommand(AddExistingAlbumAsync));
+
         private IMvxCommand _startRenameCommand;
         public IMvxCommand StartRenameCommand =>
             _startRenameCommand ?? (_startRenameCommand = new MvxCommand(StartRename, StartRenameCanExecute));
@@ -138,11 +142,39 @@ namespace MediaExplorer.Core.ViewModels
         private async Task NewAlbumAsync()
         {
             IOpenFolderDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFolderDialog();
-            if((bool)dialog.ShowDialog())
+            if ((bool)dialog.ShowDialog())
             {
                 var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
                 var albumFile = new VirtualAlbumFile(album, RootFolder);
                 RootFolder.AddChild(albumFile);
+            }
+        }
+
+        private async Task AddExistingAlbumAsync()
+        {
+            IOpenFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
+            dialog.Filter.Add(".media_explorer_album");
+            if (await dialog.ShowDialogAsync() == OpenFileDialogResult.Ok)
+            {
+                using (FileStream fs = await Mvx.IoCProvider.Resolve<IFileSystemService>().OpenFileAsync(dialog.FileName))
+                {
+                    try
+                    {
+                        Album album = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Album>(fs, _profile.KeyHash);
+                        var albumFile = new VirtualAlbumFile(album, RootFolder);
+                        RootFolder.AddChild(albumFile);
+                    }
+                    catch (InvalidKeyException e)
+                    {
+                        await Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
+                            "The selected album appears to be encrypted with a different key.",
+                            "Key Mismatch",
+                            MessageBoxButton.Ok,
+                            MessageBoxImage.Error,
+                            MessageBoxResult.Ok);
+                        return;
+                    }
+                }
             }
         }
 
