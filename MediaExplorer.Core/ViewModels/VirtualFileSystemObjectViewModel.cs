@@ -1,15 +1,17 @@
 ﻿using MvvmCross.ViewModels;
 using MvvmCross.Commands;
+using MediaExplorer.Core.Models;
 
 namespace MediaExplorer.Core.ViewModels
 {
     public abstract class VirtualFileSystemObjectViewModel : MvxViewModel
     {
-        private bool _isNameReadOnly;
+        protected VirtualFileSystemObject _virtualFileSystemObject;
+
         public bool IsNameReadOnly
         {
-            get { return _isNameReadOnly; }
-            set { SetProperty(ref _isNameReadOnly, value); }
+            get { return _virtualFileSystemObject.IsNameReadOnly; }
+            set { _virtualFileSystemObject.IsNameReadOnly = value; RaisePropertyChanged(); }
         }
 
         private IMvxCommand _startRenameCommand;

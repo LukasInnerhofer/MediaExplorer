@@ -15,14 +15,13 @@ namespace MediaExplorer.Core.ViewModels
 {
     public class VirtualAlbumFileViewModel : VirtualFileSystemObjectViewModel
     {
-        private VirtualAlbumFile _albumFile;
         public  VirtualAlbumFile AlbumFile
         {
-            get { return _albumFile; }
+            get { return _virtualFileSystemObject as VirtualAlbumFile; }
             private set 
             {
-                _albumFile = value;
-                Name = _albumFile.Name;
+                _virtualFileSystemObject = value;
+                Name = _virtualFileSystemObject.Name;
             }
         }
 
@@ -97,7 +96,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private void Open()
         {
-            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new IterativeAlbumViewModel(), _albumFile.Album);
+            Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new IterativeAlbumViewModel(), (_virtualFileSystemObject as VirtualAlbumFile).Album);
         }
 
         private bool OpenCanExecute()

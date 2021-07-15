@@ -11,6 +11,8 @@ namespace MediaExplorer.Core.Models
     public abstract class VirtualFileSystemObject
     {
         public string Name { get; protected set; }
+        [field: NonSerialized]
+        public bool IsNameReadOnly { get; set; }
         public VirtualFolder Parent { get; private set; }
 
         protected ObservableCollection<VirtualFileSystemObject> _children;

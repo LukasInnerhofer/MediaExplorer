@@ -48,11 +48,11 @@ namespace MediaExplorer.Core.ViewModels
                 {
                     if(o is VirtualFolder)
                     {
-                        ViewModels.Add(new VirtualFolderViewModel(o as VirtualFolder) { IsNameReadOnly = false });
+                        ViewModels.Add(new VirtualFolderViewModel(o as VirtualFolder));
                     }
                     else
                     {
-                        ViewModels.Add(new VirtualAlbumFileViewModel(o as VirtualAlbumFile) { IsNameReadOnly = false });
+                        ViewModels.Add(new VirtualAlbumFileViewModel(o as VirtualAlbumFile));
                     }
                 }
             }
@@ -135,6 +135,7 @@ namespace MediaExplorer.Core.ViewModels
             do
             {
                 folder = new VirtualFolder(name, RootFolder);
+                folder.IsNameReadOnly = false;
                 name = $"New Folder {counter++}";
             } while (!RootFolder.AddChild(folder));
         }
@@ -146,6 +147,7 @@ namespace MediaExplorer.Core.ViewModels
             {
                 var album = await Album.FromBasePathAsync(dialog.SelectedPath, _profile.KeyHash);
                 var albumFile = new VirtualAlbumFile(album, RootFolder);
+                albumFile.IsNameReadOnly = false;
                 RootFolder.AddChild(albumFile);
             }
         }
@@ -161,7 +163,9 @@ namespace MediaExplorer.Core.ViewModels
                     try
                     {
                         Album album = await Mvx.IoCProvider.Resolve<ICryptographyService>().DeserializeAsync<Album>(fs, _profile.KeyHash);
+                        album.InitializeNonSerializedMembers(_profile.KeyHash, dialog.FileName);
                         var albumFile = new VirtualAlbumFile(album, RootFolder);
+                        albumFile.IsNameReadOnly = true;
                         RootFolder.AddChild(albumFile);
                     }
                     catch (InvalidKeyException e)

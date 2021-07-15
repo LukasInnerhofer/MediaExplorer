@@ -9,14 +9,13 @@ namespace MediaExplorer.Core.ViewModels
 {
     public class VirtualFolderViewModel : VirtualFileSystemObjectViewModel
     {
-        private VirtualFolder _folder;
         public VirtualFolder Folder
         {
-            get { return _folder; }
+            get { return _virtualFileSystemObject as VirtualFolder; }
             private set
             {
-                _folder = value;
-                Name = _folder.Name;
+                _virtualFileSystemObject = value;
+                Name = _virtualFileSystemObject.Name;
             }
         }
 
@@ -35,18 +34,12 @@ namespace MediaExplorer.Core.ViewModels
         public IMvxCommand CancelRenameCommand =>
             _cancelRenameCommand ?? (_cancelRenameCommand = new MvxCommand(CancelRename));
 
-        private VirtualFolderViewModel(VirtualFolder folder, bool isNameReadOnly) : base()
+        public VirtualFolderViewModel(VirtualFolder folder) : base()
         {
             Folder = folder;
-            IsNameReadOnly = isNameReadOnly;
         }
 
         public VirtualFolderViewModel() : this(null)
-        {
-
-        }
-
-        public VirtualFolderViewModel(VirtualFolder folder) : this(folder, true)
         {
 
         }
