@@ -25,6 +25,7 @@ namespace MediaExplorer.Core.ViewModels
         {
             ICreateFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetCreateFileDialog();
             dialog.RestoreDirectory = true;
+            dialog.Filter.Add("Profiles", new List<string> { ".media_explorer_profile" });
             if (await dialog.ShowDialogAsync() == CreateFileDialogResult.Ok)
             {
                 await Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new CreateProfileViewModel(), dialog.FileName);
