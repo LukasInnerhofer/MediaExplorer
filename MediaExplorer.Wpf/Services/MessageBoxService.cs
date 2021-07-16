@@ -2,31 +2,32 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Threading.Tasks;
 using MediaExplorer.Core.Services;
 
 namespace MediaExplorer.Wpf.Services
 {
     class MessageBoxService : IMessageBoxService
     {
-        public Core.Services.MessageBoxResult Show(string message)
+        public Task<Core.Services.MessageBoxResult> ShowAsync(string message)
         {
-            return ConvertResult(MessageBox.Show(message));
+            return Task.FromResult(ConvertResult(MessageBox.Show(message)));
         }
-        public Core.Services.MessageBoxResult Show(string message, string title)
+        public Task<Core.Services.MessageBoxResult> ShowAsync(string message, string title)
         {
-            return ConvertResult(MessageBox.Show(message, title));
+            return Task.FromResult(ConvertResult(MessageBox.Show(message, title)));
         }
-        public Core.Services.MessageBoxResult Show(string message, string title, Core.Services.MessageBoxButton button)
+        public Task<Core.Services.MessageBoxResult> ShowAsync(string message, string title, Core.Services.MessageBoxButton button)
         {
-            return ConvertResult(MessageBox.Show(message, title, ConvertButton(button)));
+            return Task.FromResult(ConvertResult(MessageBox.Show(message, title, ConvertButton(button))));
         }
-        public Core.Services.MessageBoxResult Show(string message, string title, Core.Services.MessageBoxButton button, Core.Services.MessageBoxImage image)
+        public Task<Core.Services.MessageBoxResult> ShowAsync(string message, string title, Core.Services.MessageBoxButton button, Core.Services.MessageBoxImage image)
         {
-            return ConvertResult(MessageBox.Show(message, title, ConvertButton(button), ConvertImage(image)));
+            return Task.FromResult(ConvertResult(MessageBox.Show(message, title, ConvertButton(button), ConvertImage(image))));
         }
-        public Core.Services.MessageBoxResult Show(string message, string title, Core.Services.MessageBoxButton button, Core.Services.MessageBoxImage image, Core.Services.MessageBoxResult def)
+        public Task<Core.Services.MessageBoxResult> ShowAsync(string message, string title, Core.Services.MessageBoxButton button, Core.Services.MessageBoxImage image, Core.Services.MessageBoxResult def)
         {
-            return ConvertResult(MessageBox.Show(message, title, ConvertButton(button), ConvertImage(image), ConvertResult(def)));
+            return Task.FromResult(ConvertResult(MessageBox.Show(message, title, ConvertButton(button), ConvertImage(image), ConvertResult(def))));
         }
 
         private System.Windows.MessageBoxResult ConvertResult(Core.Services.MessageBoxResult result)
