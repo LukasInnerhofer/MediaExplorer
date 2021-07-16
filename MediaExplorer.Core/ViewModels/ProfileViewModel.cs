@@ -4,6 +4,7 @@ using MvvmCross;
 using MvvmCross.Commands;
 using MvvmCross.Navigation;
 using MvvmCross.ViewModels;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
@@ -155,7 +156,7 @@ namespace MediaExplorer.Core.ViewModels
         private async Task AddExistingAlbumAsync()
         {
             IOpenFileDialog dialog = Mvx.IoCProvider.Resolve<IFileDialogService>().GetOpenFileDialog();
-            dialog.Filter.Add(".media_explorer_album");
+            dialog.Filter.Add("Album", new List<string>() { ".media_explorer_album" });
             if (await dialog.ShowDialogAsync() == OpenFileDialogResult.Ok)
             {
                 using (FileStream fs = await Mvx.IoCProvider.Resolve<IFileSystemService>().OpenFileAsync(dialog.FileName))

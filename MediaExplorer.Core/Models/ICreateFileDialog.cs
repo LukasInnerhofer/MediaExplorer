@@ -9,11 +9,10 @@ namespace MediaExplorer.Core.Models
 
     public interface ICreateFileDialog
     {
-        IReadOnlyList<string> FileNames { get; }
         string FileName { get; }
         bool RestoreDirectory { get; set; }
-        IList<string> Filter { get; }
+        IDictionary<string, IList<string>> Filter { get; }
 
-        Task<CreateFileDialogResult> ShowDialog();
+        Task<CreateFileDialogResult> ShowDialogAsync();
     }
 }

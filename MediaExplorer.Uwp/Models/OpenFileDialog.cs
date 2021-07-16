@@ -20,12 +20,11 @@ namespace MediaExplorer.Uwp.Models
         public bool RestoreDirectory { get { return false; } set { } }
         public bool Multiselect { get; set; }
 
-        private List<string> _filter;
-        public IList<string> Filter { get { return _filter; } }
+        public IDictionary<string, IList<string>> Filter { get; private set; }
 
         public OpenFileDialog()
         {
-            _filter = new List<string>();
+            Filter = new Dictionary<string, IList<string>>();
         }
 
         public async Task<OpenFileDialogResult> ShowDialogAsync()
@@ -35,15 +34,18 @@ namespace MediaExplorer.Uwp.Models
             _picker = new FileOpenPicker();
             _picker.ViewMode = PickerViewMode.Thumbnail;
             
-            if (_filter.Count == 0)
+            if (Filter.Count == 0)
             {
                 _picker.FileTypeFilter.Add("*");
             }
             else
             {
-                foreach (string filterEntry in Filter)
+                foreach (KeyValuePair<string, IList<string>> filterEntry in Filter)
                 {
-                    _picker.FileTypeFilter.Add(filterEntry);
+                    foreach (string fileType in filterEntry.Value)
+                    {
+                        _picker.FileTypeFilter.Add(fileType);
+                    }
                 }
             }
 

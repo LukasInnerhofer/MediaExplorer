@@ -13,42 +13,37 @@ namespace MediaExplorer.Uwp.Models
     {
         FileSavePicker _picker;
 
-        private List<string> _fileNames;
-        public IReadOnlyList<string> FileNames { get { return _fileNames; } }
-
-        public string FileName { get { return FileNames[0]; } }
+        public string FileName { get; private set; }
         public bool RestoreDirectory { get { return false; } set { } }
 
-        private List<string> _filter;
-        public IList<string> Filter { get { return _filter; } }
+        public IDictionary<string, IList<string>> Filter { get; private set; }
 
         public CreateFileDialog()
         {
-            _filter = new List<string>();
+            Filter = new Dictionary<string, IList<string>>();
         }
 
-        public async Task<CreateFileDialogResult> ShowDialog()
+        public async Task<CreateFileDialogResult> ShowDialogAsync()
         {
-            _fileNames = new List<string>();
             CreateFileDialogResult result = CreateFileDialogResult.None;
             _picker = new FileSavePicker();
 
-            if (_filter.Count == 0)
+            if (Filter.Count == 0)
             {
-                _picker.FileTypeChoices.Add("All files", new List<string>() { ".media_explorer_profile" });
+                throw new InvalidOperationException("Filter must not be empty");
             }
             else
             {
-                foreach (string filterEntry in Filter)
+                foreach (KeyValuePair<string, IList<string>> filterEntry in Filter)
                 {
-                    _picker.FileTypeChoices.Add(filterEntry, new List<string>() { filterEntry });
+                    _picker.FileTypeChoices.Add(filterEntry.Key, filterEntry.Value);
                 }
             }
 
             StorageFile file = await _picker.PickSaveFileAsync();
             if (file != null)
             {
-                _fileNames.Add(file.Path);
+                FileName = file.Path;
                 result = CreateFileDialogResult.Ok;
             }
             else

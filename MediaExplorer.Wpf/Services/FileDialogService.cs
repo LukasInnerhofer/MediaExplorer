@@ -18,5 +18,10 @@ namespace MediaExplorer.Wpf.Services
         {
             return new OpenFileDialog();
         }
+
+        public ICreateFileDialog GetCreateFileDialog()
+        {
+            return new CreateFileDialog();
+        }
     }
 }

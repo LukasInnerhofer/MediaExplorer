@@ -13,7 +13,7 @@ namespace MediaExplorer.Core.Models
         string FileName { get; }
         bool RestoreDirectory { get; set; }
         bool Multiselect { get; set; }
-        IList<string> Filter { get; }
+        IDictionary<string, IList<string>> Filter { get; }
 
         Task<OpenFileDialogResult> ShowDialogAsync();
     }

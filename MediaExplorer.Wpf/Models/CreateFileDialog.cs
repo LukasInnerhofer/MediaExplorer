@@ -8,38 +8,33 @@ using MediaExplorer.Core.Models;
 
 namespace MediaExplorer.Wpf.Models
 {
-    class OpenFileDialog : IOpenFileDialog
+    class CreateFileDialog : ICreateFileDialog
     {
-        private System.Windows.Forms.OpenFileDialog _dialog;
-
-        public IReadOnlyList<string> FileNames => _dialog.FileNames;
+        private SaveFileDialog _dialog;
 
         public string FileName => _dialog.FileName;
 
-        public IDictionary<string, IList<string>> Filter { get; private set; }
-        public string InitialDirectory 
-        { 
-            get { return _dialog.InitialDirectory; }
-            set { _dialog.InitialDirectory = value; } 
-        }
-        public bool RestoreDirectory 
-        { 
-            get { return _dialog.RestoreDirectory; } 
-            set { _dialog.RestoreDirectory = value;  }
-        }
-        public bool Multiselect
+        public bool RestoreDirectory
         {
-            get { return _dialog.Multiselect; }
-            set { _dialog.Multiselect = value; }
+            get
+            {
+                return _dialog.RestoreDirectory;
+            }
+            set
+            {
+                _dialog.RestoreDirectory = value;
+            }
         }
 
-        public OpenFileDialog()
+        public IDictionary<string, IList<string>> Filter { get; private set; }
+
+        public CreateFileDialog()
         {
-            _dialog = new System.Windows.Forms.OpenFileDialog();
+            _dialog = new SaveFileDialog();
             Filter = new Dictionary<string, IList<string>>();
         }
 
-        public Task<OpenFileDialogResult> ShowDialogAsync()
+        public Task<CreateFileDialogResult> ShowDialogAsync()
         {
             if (Filter.Count == 0)
             {
@@ -64,17 +59,17 @@ namespace MediaExplorer.Wpf.Models
             return Task.FromResult(ConvertResult(_dialog.ShowDialog()));
         }
 
-        private OpenFileDialogResult ConvertResult(DialogResult result)
+        private CreateFileDialogResult ConvertResult(DialogResult result)
         {
             switch (result)
             {
                 default:
                 case DialogResult.None:
-                    return OpenFileDialogResult.None;
+                    return CreateFileDialogResult.None;
                 case DialogResult.OK:
-                    return OpenFileDialogResult.Ok;
+                    return CreateFileDialogResult.Ok;
                 case DialogResult.Cancel:
-                    return OpenFileDialogResult.Cancel;
+                    return CreateFileDialogResult.Cancel;
             }
         }
     }
