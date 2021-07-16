@@ -15,6 +15,7 @@ namespace MediaExplorer.Wpf
             InitializeComponent();
             Mvx.IoCProvider.RegisterSingleton<IMessageBoxService>(new MessageBoxService());
             Mvx.IoCProvider.RegisterSingleton<IFileDialogService>(new FileDialogService());
+            Mvx.IoCProvider.RegisterSingleton<IFileSystemService>(new FileSystemService());
         }
     }
 }
