@@ -22,6 +22,7 @@
             <MenuItem Header="Add">
                 <MenuItem Header="New Folder" Command="{Binding NewFolderCommand}"/>
                 <MenuItem Header="New Album" Command="{Binding NewAlbumCommand}"/>
+                <MenuItem Header="Existing Album" Command="{Binding AddExistingAlbum}"/>
             </MenuItem>
             <MenuItem Header="Edit">
                 <MenuItem Header="Rename" Command="{Binding StartRenameCommand}"/>
