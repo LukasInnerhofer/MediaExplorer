@@ -42,19 +42,20 @@ namespace MediaExplorer.Wpf.Models
             }
             else
             {
+                string filter = "";
                 foreach (KeyValuePair<string, IList<string>> filterEntry in Filter)
                 {
                     string fileTypes = "";
 
                     foreach (string fileType in filterEntry.Value)
                     {
-                        fileTypes += $"{fileType};";
+                        fileTypes += $"*{fileType};";
                     }
                     fileTypes = fileTypes.Remove(fileTypes.Length - 1);
 
-                    _dialog.Filter += $"{filterEntry.Key} ({fileTypes})|{fileTypes}|";
+                    filter += $"{filterEntry.Key} |{fileTypes}|";
                 }
-                _dialog.Filter = _dialog.Filter.Remove(_dialog.Filter.Length - 1);
+                _dialog.Filter = filter.Remove(filter.Length - 1);
             }
             return Task.FromResult(ConvertResult(_dialog.ShowDialog()));
         }
