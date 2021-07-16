@@ -29,7 +29,7 @@ namespace MediaExplorer.Uwp.Services
             return new FileStream(WindowsRuntimeStorageExtensions.CreateSafeFileHandle(await StorageFile.GetFileFromPathAsync(path)), FileAccess.ReadWrite);
         }
 
-        public async Task<bool> FileExists(string path)
+        public async Task<bool> FileExistsAsync(string path)
         {
             return await StorageFile.GetFileFromPathAsync(path) != null;
         }

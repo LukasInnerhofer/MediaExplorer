@@ -31,7 +31,7 @@ namespace MediaExplorer.Core.Models
         {
             _key = param as byte[];
 
-            while (!await Mvx.IoCProvider.Resolve<IFileSystemService>().FileExists(_realPath))
+            while (!await Mvx.IoCProvider.Resolve<IFileSystemService>().FileExistsAsync(_realPath))
             {
                 MessageBoxResult result = await Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
                     $"Album {Name} does not exist. Would you like to update its path?",

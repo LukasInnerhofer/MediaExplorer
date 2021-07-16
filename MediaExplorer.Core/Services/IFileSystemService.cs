@@ -11,6 +11,6 @@ namespace MediaExplorer.Core.Services
         Task CreateFileAsync(string path);
         Task<FileStream> OpenFileAsync(string path);
 
-        Task<bool> FileExists(string path);
+        Task<bool> FileExistsAsync(string path);
     }
 }
