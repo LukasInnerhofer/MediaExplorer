@@ -18,7 +18,7 @@
                 <TextBlock Text="Create new Profile"/>
             </StackPanel>
         </Button>
-        <Button Command="{Binding OpenProfileCommand}">
+        <Button Margin="3,0,0,0" Command="{Binding OpenProfileCommand}">
             <StackPanel>
                 <SymbolIcon Symbol="OpenFile"/>
                 <TextBlock Text="Open Profile"/>
