@@ -169,7 +169,7 @@ namespace MediaExplorer.Core.ViewModels
                         albumFile.IsNameReadOnly = true;
                         RootFolder.AddChild(albumFile);
                     }
-                    catch (InvalidKeyException e)
+                    catch (InvalidKeyException)
                     {
                         await Mvx.IoCProvider.Resolve<IMessageBoxService>().ShowAsync(
                             "The selected album appears to be encrypted with a different key.",
