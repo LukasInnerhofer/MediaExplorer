@@ -14,7 +14,7 @@
             VerticalAlignment="Center"
             Width="300"
             FocusManager.FocusedElement="{Binding ElementName=PwdBox}">
-            <TextBlock Margin="0,0,0,8" TextWrapping="Wrap" Text="No valid profile found. Create one by entering your private key."/>
+            <TextBlock Margin="0,0,0,8" TextWrapping="Wrap" Text="Create a new profile by entering your private key."/>
             <PasswordBox Margin="0,0,0,8" x:Name="PwdBox" PasswordChanged="PwdBox_PasswordChanged"/>
             <Button
                 IsDefault="True"
