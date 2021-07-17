@@ -86,9 +86,6 @@ namespace MediaExplorer.Core.ViewModels
             }
         }
 
-        protected virtual async Task CloseAsync()
-        {
-
-        }
+        protected abstract Task CloseAsync();
     }
 }

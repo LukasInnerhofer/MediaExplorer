@@ -57,9 +57,6 @@ namespace MediaExplorer.Core.Models
             Name = newName;
         }
 
-        public virtual async Task InitializeNonSerializedMembers(object param)
-        {
-
-        }
+        public abstract Task InitializeNonSerializedMembers(object param);
     }
 }
