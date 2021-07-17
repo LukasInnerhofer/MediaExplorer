@@ -62,7 +62,7 @@ namespace MediaExplorer.Core.ViewModels
                         MessageBoxResult.Ok);
                     return;
                 }
-                await profile.InitializeNonSerializedMembers(keyHash);
+                await profile.InitializeNonSerializedMembers(keyHash, _profilePath);
             }
             
             await Mvx.IoCProvider.Resolve<IMvxNavigationService>().Navigate(new ProfileViewModel(), profile);

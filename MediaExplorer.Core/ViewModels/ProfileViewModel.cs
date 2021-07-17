@@ -114,7 +114,7 @@ namespace MediaExplorer.Core.ViewModels
 
         private async Task Save()
         {
-            using(var fs = new FileStream(Constants.File.Profile, FileMode.Open))
+            using(var fs = new FileStream(_profile.Path, FileMode.Open))
             {
                 await Mvx.IoCProvider.Resolve<ICryptographyService>().SerializeAsync(fs, _profile, _profile.KeyHash);
             }
