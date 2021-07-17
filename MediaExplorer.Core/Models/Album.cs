@@ -78,10 +78,10 @@ namespace MediaExplorer.Core.Models
         {
             _key = key;
             FilePath = filePath;
-            if(filePath.Replace(Path.DirectorySeparatorChar + ".media_explorer_album", "") != _basePath)
+            if (Path.GetDirectoryName(FilePath) != _basePath)
             {
                 string oldBasePath = _basePath;
-                _basePath = FilePath.Replace(Path.DirectorySeparatorChar + ".media_explorer_album", "");
+                _basePath = Path.GetDirectoryName(filePath);
                 foreach (MediaCollection collection in _mediaCollections)
                 {
                     foreach (Media media in collection.Media)
